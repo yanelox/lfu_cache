@@ -4,11 +4,11 @@
 struct hash_map Init_Hash_Map ()
 {
     struct hash_map Hash_Map = {NULL, 0}; //TODO: use calloc or malloc
-    
+
     Hash_Map.size = cache_size;
 
-    Hash_Map.cells = (struct hash_cell*) calloc (cache_size, sizeof (struct hash_cell));    
-    assert (Hash_Map.cells); //TODO: exception catcher
+    Hash_Map.cells = (struct hash_cell*) calloc (cache_size, sizeof (struct hash_cell));
+    assert (Hash_Map.cells); //TODO: exception catcher 1111
 
     return Hash_Map;
 }
@@ -18,23 +18,23 @@ void Free_Hash_Map (struct hash_map Hash_Map)
 {
     for (int counter = 0; counter < cache_size; counter++)
     {
-        free (Hash_Map.cells[counter].next); 
+        free (Hash_Map.cells[counter].next);
 
         free (Hash_Map.cells[counter].item);
     }
-    //TODO: free collisions
+    //TODO: free collisions 42
     free (Hash_Map.cells);
 
-    //TODO: free struct
+    //TODO: free struct 42
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 void Insert_Hash_Map (struct hash_map* Hash_Map, int data)
 {
     assert (Hash_Map); //TODO: exception catcher
-    
+
     int key = Hash_of_Data (data);
-    
+
     struct hash_cell* cell = Hash_Map->cells + key;
     struct hash_cell* start_cell = cell;
 
@@ -45,13 +45,13 @@ void Insert_Hash_Map (struct hash_map* Hash_Map, int data)
         cell->item->data_t = data;
         return;
     }
-    
+
     cell = Search_Data (cell, data);
-    
+
     if (!cell)
     {
         cell = start_cell;
-        while (cell->next)        
+        while (cell->next)
             cell = cell->next;
 
         cell->next = (struct hash_cell*) calloc (1, sizeof (struct hash_cell));
@@ -90,7 +90,7 @@ struct lfu_node* Lfu_Node_Constuct (struct lfu_node* node) //TODO: remove ndoe f
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 struct hash_cell* Search_Data (struct hash_cell* cell, int data)
-{   
+{
     while (cell->next)
     {
         if (cell->item->data_t == data)
