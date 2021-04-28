@@ -1,35 +1,46 @@
 #include "Hash_Map.h" //TODO: change int to typedef
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-struct hash_map Init_Hash_Map ()
+struct hash_map* Init_Hash_Map ()
 {
-    struct hash_map Hash_Map = {NULL, 0}; //TODO: use calloc or malloc
+    struct hash_map* Hash_Map = (struct hash_map*) calloc (1, sizeof (struct hash_map));
+    assert (Hash_Map);
 
-    Hash_Map.size = cache_size;
+    Hash_Map->size = cache_size;
 
-    Hash_Map.cells = (struct hash_cell*) calloc (cache_size, sizeof (struct hash_cell));
-    assert (Hash_Map.cells); //TODO: exception catcher 1111
+    Hash_Map->cells = (struct hash_cell*) calloc (cache_size, sizeof (struct hash_cell));
+    assert (Hash_Map->cells); //TODO: exception catcher 1111
 
     return Hash_Map;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-void Free_Hash_Map (struct hash_map Hash_Map)
+int Free_Hash_Map (struct hash_map* Hash_Map)
 {
+    struct hash_cell* del = NULL;
     for (int counter = 0; counter < cache_size; counter++)
     {
-        free (Hash_Map.cells[counter].next);
+        del = Hash_Map->cells[counter].next;
+        while (del->next)
+        {
+            free (del->item);
+            del = del->next;
+            free (del->prev);
 
-        free (Hash_Map.cells[counter].item);
+        }
+        free (del->item);
+        free (del);
+        free (Hash_Map->cells[counter].item);
     }
-    //TODO: free collisions 42
-    free (Hash_Map.cells);
 
-    //TODO: free struct 42
+    free (Hash_Map->cells);
+
+    free (Hash_Map);
+    return 0;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-void Insert_Hash_Map (struct hash_map* Hash_Map, int data)
+int Insert_Hash_Map (struct hash_map* Hash_Map, int data)
 {
     assert (Hash_Map); //TODO: exception catcher
 
@@ -43,7 +54,7 @@ void Insert_Hash_Map (struct hash_map* Hash_Map, int data)
         cell->item = Lfu_Node_Constuct (cell->item);
 
         cell->item->data_t = data;
-        return;
+        return 0;
     }
 
     cell = Search_Data (cell, data);
@@ -52,16 +63,20 @@ void Insert_Hash_Map (struct hash_map* Hash_Map, int data)
     {
         cell = start_cell;
         while (cell->next)
+        {
+            cell->next->prev = cell;
             cell = cell->next;
+        }
 
         cell->next = (struct hash_cell*) calloc (1, sizeof (struct hash_cell));
         assert (cell->next); //TODO: exception catcher
 
+        cell->next->prev = cell;
         cell->next->item = Lfu_Node_Constuct (cell->next->item);
         cell->next->item->data_t = data;
-        return;
+        return 0;
     }
-
+    return 0;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -74,7 +89,6 @@ int Hash_of_Data (int data)
     int coeff_2 = 521;
 
     key = ((coeff_1 * data + coeff_2) % prime) % 2048;
-    // printf ("CACHE_SIZE = %d", key);
 
     return key;
 }
@@ -98,8 +112,8 @@ struct hash_cell* Search_Data (struct hash_cell* cell, int data)
 
         cell = cell->next;
     }
-
-    if (cell->item->data_t == data) //TODO: make explaining comment
+    //In the next line I try to find an element in the last node of the list
+    if (cell->item->data_t == data)
             return cell;
 
     return NULL;
