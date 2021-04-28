@@ -17,3 +17,5 @@ int main ()
     printf ("Hash_Map.cells[670].items->data_t = %d", Hash_Map.cells[670].next->next->item->data_t);
     Free_Hash_Map (Hash_Map);
 }
+//TODO: idea for test: print all collisions list
+//TODO: tests for all func
