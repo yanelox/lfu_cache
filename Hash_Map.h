@@ -6,7 +6,7 @@
 #include <assert.h>
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-struct lfu_node;
+struct lfu_node;        //TODO: make typedef-s
 struct freq_node;
 struct hash_cell;
 struct hash_map Init_Hash_Map ();
@@ -17,7 +17,7 @@ void Insert_Hash_Map (struct hash_map* Hash_Map, int data);
 int Hash_of_Data (int data);
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-struct lfu_node 
+struct lfu_node
 { 
     int data_t;
     struct lfu_node * next;

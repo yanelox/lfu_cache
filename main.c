@@ -14,7 +14,7 @@ int main ()
     int res = Hash_of_Data (3020);
     printf ("RES = %d\n", res);
 
-    printf ("Hash_Map.cells[670].items->data_t = %d", Hash_Map.cells[670].next->next->item->data_t);
+    printf ("Hash_Map.cells[670].items->data_t = %d\n", Hash_Map.cells[670].next->next->item->data_t);
     Free_Hash_Map (Hash_Map);
 }
 //TODO: idea for test: print all collisions list
