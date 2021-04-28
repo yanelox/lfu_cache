@@ -22,10 +22,10 @@ void Free_Hash_Map (struct hash_map Hash_Map)
 
         free (Hash_Map.cells[counter].item);
     }
-    //TODO: free collisions
+    //TODO: free collisions 42
     free (Hash_Map.cells);
 
-    //TODO: free struct
+    //TODO: free struct 42
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
