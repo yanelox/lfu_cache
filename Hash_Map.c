@@ -1,7 +1,7 @@
-#include "Hash_Map.h" //TODO: change int to typedef
+#include "Hash_Map.h"
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-static int pow_mod (int n, int k, int m)
+static int pow_mod (int n, int k, int m) //This is just an auxiliary function
 {
   int mult = 0, prod = 0;
 
@@ -65,7 +65,7 @@ int Free_Hash_Map (struct hash_map* Hash_Map)
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-int Insert_Hash_Map (struct hash_map* Hash_Map, struct request_t* request)
+int Insert_Hash_Map (struct hash_map* Hash_Map, DATA* request)
 {
     assert (Hash_Map); //TODO: exception catcher
 
@@ -104,20 +104,14 @@ int Insert_Hash_Map (struct hash_map* Hash_Map, struct request_t* request)
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-int Hash_of_Data (struct request_t* request)
+int Hash_of_Data (DATA* request)
 {
     int key = 0;
     char* string = NULL;
     size_t req_size = sizeof (*request); //size of request
-    //printf ("req_size = %d\n", req_size);
 
-    //printf("%d\n", req_size);
-
-    //pointer = &request;
     string = (char*) calloc (req_size, sizeof (char));
     string = memcpy (string, request, req_size);
-
-    //strncpy (string, pointer, req_size);
 
     key = Hash_of_Char (string, req_size);
     free (string);
@@ -148,11 +142,6 @@ int Hash_of_Char (char* string, int len)
   int prime = 919;
   int sum = 0;
 
-  // for (int i = 0; i < len; i++)
-  // printf("byte[%d] = %d\n", i, string[i]);
-
-  //printf("g = %d\n", 'g');
-
   for (int i = 0; i < len; i++)
   {
     sum += ( abs (string[i]) * pow_mod (coeff, len - i, prime)) % prime;
@@ -165,7 +154,7 @@ int Hash_of_Char (char* string, int len)
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-struct lfu_node* Lfu_Node_Constuct () //TODO: remove ndoe from func args
+struct lfu_node* Lfu_Node_Constuct () 
 {   
     struct lfu_node* node = NULL;
 
@@ -176,7 +165,7 @@ struct lfu_node* Lfu_Node_Constuct () //TODO: remove ndoe from func args
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-struct hash_cell* Search_Data (struct hash_cell* cell, struct request_t* request)
+struct hash_cell* Search_Data (struct hash_cell* cell, DATA* request)
 {
     while (cell->next)
     {
@@ -191,7 +180,7 @@ struct hash_cell* Search_Data (struct hash_cell* cell, struct request_t* request
 
     return NULL;
 }
-//TODO: print table func
+//TODO: print table func :)
 // int Test_Hash_Map (struct hash_map* Hash_Map)
 // {
 //     FILE* fp;

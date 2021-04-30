@@ -4,14 +4,14 @@
 int main ()
 {
     struct hash_map* Hash_Map = NULL;
-    struct request_t** requests = NULL;
+    DATA** requests = NULL;
     Hash_Map = Init_Hash_Map ();
 
-    requests = (struct request_t**) calloc (NUM, sizeof (struct request_t*));
+    requests = (DATA**) calloc (NUM, sizeof (DATA*));
 
     for (int i = 0; i < NUM; i++)
     {
-        requests[i] = (struct request_t*) calloc (1, sizeof (struct request_t));
+        requests[i] = (DATA*) calloc (1, sizeof (DATA));
         requests[i]->data = i;
         requests[i]->c = 'c';
         requests[i]->d = (float) i / 232;
