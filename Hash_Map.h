@@ -4,24 +4,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-#define NUM 100000
+#define NUM 1000
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+struct request_t;
 struct lfu_node;
 struct freq_node;
 struct hash_cell;
 struct hash_map* Init_Hash_Map ();
 int Free_Hash_Map (struct hash_map* Hash_Map);
-struct lfu_node* Lfu_Node_Constuct (struct lfu_node* node);
-struct hash_cell* Search_Data (struct hash_cell* cell, int data);
-int Insert_Hash_Map (struct hash_map* Hash_Map, int data);
-int Hash_of_Data (int data);
-int Test_Hash_Map (struct hash_map* Hash_Map);
+struct lfu_node* Lfu_Node_Constuct ();
+struct hash_cell* Search_Data (struct hash_cell* cell, struct request_t* request);
+int Insert_Hash_Map (struct hash_map* Hash_Map, struct request_t* request);
+int Hash_of_Data (struct request_t* request);
+int Hash_of_Char (char* string, int len);
+//int Test_Hash_Map (struct hash_map* Hash_Map);
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
+struct request_t
+{
+    int               data;
+    char c;
+    float d;
+};
+
 struct lfu_node
 {
-    int data_t;
+    struct request_t* data_t;
     struct lfu_node * next;
     struct lfu_node * prev;
 
@@ -51,10 +63,12 @@ struct hash_map
 {
     struct hash_cell* cells;
     int               size;
+
 };
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 enum Const_Values
 {
     cache_size = 2048
+
 };
