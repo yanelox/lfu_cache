@@ -112,7 +112,7 @@ int Hash_of_Data (DATA* request)
 
     string = (char*) calloc (req_size, sizeof (char));
     string = memcpy (string, request, req_size);
-
+    
     key = Hash_of_Char (string, req_size);
     free (string);
 

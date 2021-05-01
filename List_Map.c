@@ -2,9 +2,8 @@
 #include<stdlib.h>
 #include<assert.h>
 #include "Hash_Map.h"
-
 //---------------------------------------------------------------------
-
+//---------------------------------------------------------------------
 struct freq_node* create_freq(int freq_dat, struct freq_node* prev_fr)                                 //prev_fr != NULL!! That function doesn`t create head!
 {
     struct freq_node* res;
@@ -26,9 +25,8 @@ struct freq_node* create_freq(int freq_dat, struct freq_node* prev_fr)          
 
     return res;
 }
-
 //---------------------------------------------------------------------
-
+//---------------------------------------------------------------------
 struct lfu_node* create_lfu(struct request_t* lfu_dat, struct freq_node* parent_lfu, struct lfu_node* prev_lfu)       //prev_lfu may be NULL
 {
     struct lfu_node* res;
@@ -45,9 +43,8 @@ struct lfu_node* create_lfu(struct request_t* lfu_dat, struct freq_node* parent_
 
     return res;
 }
-
 //---------------------------------------------------------------------
-
+//---------------------------------------------------------------------
 void remove_freq(struct freq_node* del)                                                                 //del->prev != NULL and del->next != NULL
 {
     assert(del->prev != NULL);
@@ -60,9 +57,8 @@ void remove_freq(struct freq_node* del)                                         
 
     return;
 }
-
 //---------------------------------------------------------------------
-
+//---------------------------------------------------------------------
 void remove_lfu(struct freq_node* head)
 {
     struct lfu_node* res;
@@ -86,9 +82,8 @@ void remove_lfu(struct freq_node* head)
 
     return;
 }
-
 //---------------------------------------------------------------------
-
+//---------------------------------------------------------------------
 void replace_lfu(struct lfu_node* cur_lfu)
 {
     int data = cur_lfu->parent->freq_t;
@@ -145,5 +140,5 @@ void replace_lfu(struct lfu_node* cur_lfu)
 
     return;
 }
-
+//---------------------------------------------------------------------
 //---------------------------------------------------------------------
