@@ -80,7 +80,7 @@ void remove_lfu(struct freq_node* head)
     }
 
     else
-        remove_lfu(cur_fr);
+        remove_freq(cur_fr);
 
     free(res);
 
