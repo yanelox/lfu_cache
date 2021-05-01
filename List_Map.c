@@ -76,7 +76,7 @@ void remove_lfu(struct freq_node* head)
     }
 
     else
-        remove_lfu(cur_fr);
+        remove_freq(cur_fr);
 
     free(res);
 
@@ -90,6 +90,7 @@ void replace_lfu(struct lfu_node* cur_lfu)
     struct freq_node* cur_fr = cur_lfu->parent;
     struct lfu_node* last = NULL;
     struct freq_node* new_fr = NULL;
+    int delet = 0;
 
     if(cur_lfu->prev != NULL)
 
@@ -111,7 +112,7 @@ void replace_lfu(struct lfu_node* cur_lfu)
         }
 
         else
-            remove_freq(cur_lfu->parent);
+            delet = 1;
 
     cur_lfu->prev = NULL;
     cur_lfu->next = NULL;
@@ -119,10 +120,8 @@ void replace_lfu(struct lfu_node* cur_lfu)
 
     if(cur_fr->next != NULL && cur_fr->next->freq_t == data + 1)
     {
-        cur_fr = cur_fr->next;
-
-        cur_lfu->parent = cur_fr;
-        last = cur_fr->child;
+        cur_lfu->parent = cur_fr->next;
+        last = cur_fr->next->child;
 
         while(last->next != NULL)
             last = last->next;
@@ -137,6 +136,9 @@ void replace_lfu(struct lfu_node* cur_lfu)
         new_fr->child = cur_lfu;
         cur_lfu->parent = new_fr;
     }
+
+    if(delet == 1)
+        remove_freq(cur_fr);
 
     return;
 }
