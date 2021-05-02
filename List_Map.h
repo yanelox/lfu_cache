@@ -13,7 +13,7 @@ struct freq_node;
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 struct freq_node* create_freq(int freq_dat, struct freq_node* prev_fr);
-struct lfu_node* create_lfu(DATA* lfu_dat, struct freq_node* parent_lfu, struct lfu_node* prev_lfu);
+struct lfu_node* create_lfu(DATA* lfu_dat, struct freq_node* head)
 void remove_freq(struct freq_node* del);
 void remove_lfu(struct freq_node* head);
 void replace_lfu(struct lfu_node* cur_lfu);
