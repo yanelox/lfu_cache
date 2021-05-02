@@ -2,9 +2,12 @@
 #include<stdlib.h>
 #include<assert.h>
 #include "Hash_Map.h"
+#include "List_Map.h"
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-struct freq_node* create_freq(int freq_dat, struct freq_node* prev_fr)                                 //prev_fr != NULL!! That function doesn`t create head!
+//Creates an element in the place the user wants. Function need data(frequency)
+//and previous item (place where we should create)
+struct freq_node* create_freq(int freq_dat, struct freq_node* prev_fr) //prev_fr != NULL!! That function doesn`t create head!
 {
     struct freq_node* res;
 
@@ -26,24 +29,46 @@ struct freq_node* create_freq(int freq_dat, struct freq_node* prev_fr)          
     return res;
 }
 //---------------------------------------------------------------------
+// Creates last lfu_node at frequency 1. If frequency 1 is not exist, it will
+// be created (with function create_freq).
 //---------------------------------------------------------------------
-struct lfu_node* create_lfu(struct request_t* lfu_dat, struct freq_node* parent_lfu, struct lfu_node* prev_lfu)       //prev_lfu may be NULL
+struct lfu_node* create_lfu(DATA* lfu_dat, struct freq_node* head)
 {
     struct lfu_node* res;
+    struct lfu_node* cur_lfu = NULL;
+    struct freq_node* cur_fr;
 
-    assert(parent_lfu != NULL);
+    assert(head != NULL);
 
     res = (struct lfu_node*)calloc(1, sizeof(struct lfu_node));
-    res->data_t = lfu_dat;
-    res->parent = parent_lfu;
-    res->prev = prev_lfu;
 
-    if(prev_lfu != NULL)
-        prev_lfu->next = res;
+    if(head->next != NULL && head->next->freq_t == 1)
+    {
+        cur_fr = head->next;
+        cur_lfu = cur_fr->child;
+
+        while(cur_lfu->next != NULL)
+            cur_lfu = cur_lfu->next;
+
+        res->parent = cur_fr;
+        res->prev = cur_lfu;
+        cur_lfu->next = res;
+        res->next = NULL;
+    }
+
+    else
+    {
+        cur_fr = create_freq(1, head);
+        res->parent = cur_fr;
+        cur_fr->child = res;
+        res->next = NULL;
+        res->prev = NULL;
+    }
 
     return res;
 }
 //---------------------------------------------------------------------
+//delete freq_node
 //---------------------------------------------------------------------
 void remove_freq(struct freq_node* del)                                                                 //del->prev != NULL and del->next != NULL
 {
@@ -58,6 +83,7 @@ void remove_freq(struct freq_node* del)                                         
     return;
 }
 //---------------------------------------------------------------------
+//delete lfu_node
 //---------------------------------------------------------------------
 void remove_lfu(struct freq_node* head)
 {
@@ -83,6 +109,9 @@ void remove_lfu(struct freq_node* head)
     return;
 }
 //---------------------------------------------------------------------
+//When we already have the resulting item in the list, we need to replace
+//it. If the element with current frequency + 1 doesn`t exist it will
+//be created (with function create_freq).
 //---------------------------------------------------------------------
 void replace_lfu(struct lfu_node* cur_lfu)
 {
@@ -143,4 +172,15 @@ void replace_lfu(struct lfu_node* cur_lfu)
     return;
 }
 //---------------------------------------------------------------------
+struct freq_node* create_head()
+{
+    struct freq_node* head;
+
+    head = (struct freq_node*)calloc(1, sizeof(struct freq_node));
+    head->next = NULL;
+    head->prev = NULL;
+    head->child = NULL;
+
+    return head;
+}
 //---------------------------------------------------------------------
