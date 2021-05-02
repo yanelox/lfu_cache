@@ -1,4 +1,4 @@
-#include "Hash_Map.h"
+#include "LFU.h"
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 static int pow_mod (int n, int k, int m) //This is just an auxiliary function
@@ -37,7 +37,7 @@ struct hash_map* Init_Hash_Map () //Constructor of hash table
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-int Free_Hash_Map (struct hash_map* Hash_Map) //D
+int Free_Hash_Map (struct hash_map* Hash_Map) //Destructor of hash table
 {
     struct hash_cell* del = NULL;
     for (int counter = 0; counter < cache_size; counter++)
@@ -47,15 +47,12 @@ int Free_Hash_Map (struct hash_map* Hash_Map) //D
         {
             while (del->next)
             {
-                free (del->item);
                 del = del->next;
                 free (del->prev);
 
             }
-            free (del->item); //del later because it's not mine
             free (del);
         }
-        free (Hash_Map->cells[counter].item);
     }
 
     free (Hash_Map->cells);

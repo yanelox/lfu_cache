@@ -13,8 +13,6 @@
 typedef struct request_t DATA;
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-struct lfu_node;
-struct freq_node;
 struct hash_cell;
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -33,26 +31,6 @@ struct request_t      //change it like you want
     int               data;
     char              c;
     float             d;
-} ;
-
-struct lfu_node
-{
-    struct request_t* data_t;
-    struct lfu_node * next;
-    struct lfu_node * prev;
-
-    struct freq_node* parent;
-
-};
-
-struct freq_node
-{
-    int freq_t;
-    struct freq_node* next;
-    struct freq_node* prev;
-
-    struct lfu_node * child;
-
 };
 
 struct hash_cell

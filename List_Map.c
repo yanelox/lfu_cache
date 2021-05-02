@@ -1,8 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<assert.h>
-#include "Hash_Map.h"
-#include "List_Map.h"
+#include "LFU.h"
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 //Creates an element in the place the user wants. Function need data(frequency)
