@@ -23,7 +23,7 @@ static int pow_mod (int n, int k, int m) //This is just an auxiliary function
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-struct hash_map* Init_Hash_Map ()
+struct hash_map* Init_Hash_Map () //Constructor of hash table
 {
     struct hash_map* Hash_Map = (struct hash_map*) calloc (1, sizeof (struct hash_map));
     assert (Hash_Map);
@@ -37,7 +37,7 @@ struct hash_map* Init_Hash_Map ()
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-int Free_Hash_Map (struct hash_map* Hash_Map)
+int Free_Hash_Map (struct hash_map* Hash_Map) //D
 {
     struct hash_cell* del = NULL;
     for (int counter = 0; counter < cache_size; counter++)
