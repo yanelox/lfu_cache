@@ -1,12 +1,14 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<assert.h>
-#include "LFU.h"
-//---------------------------------------------------------------------
+#include "Hash_Map.h"
+#include "List_Map.h"
+
 //---------------------------------------------------------------------
 //Creates an element in the place the user wants. Function need data(frequency)
 //and previous item (place where we should create)
-struct freq_node* create_freq(int freq_dat, struct freq_node* prev_fr) //prev_fr != NULL!! That function doesn`t create head!
+//---------------------------------------------------------------------
+struct freq_node* create_freq(int freq_dat, struct freq_node* prev_fr)                      //prev_fr != NULL!! That function doesn`t create head!
 {
     struct freq_node* res;
 
@@ -31,7 +33,7 @@ struct freq_node* create_freq(int freq_dat, struct freq_node* prev_fr) //prev_fr
 // Creates last lfu_node at frequency 1. If frequency 1 is not exist, it will
 // be created (with function create_freq).
 //---------------------------------------------------------------------
-struct lfu_node* create_lfu(DATA* lfu_dat, struct freq_node* head)
+struct lfu_node* create_lfu(DATA lfu_dat, struct freq_node* head)
 {
     struct lfu_node* res;
     struct lfu_node* cur_lfu = NULL;
@@ -40,6 +42,7 @@ struct lfu_node* create_lfu(DATA* lfu_dat, struct freq_node* head)
     assert(head != NULL);
 
     res = (struct lfu_node*)calloc(1, sizeof(struct lfu_node));
+    res->data_t = lfu_dat;
 
     if(head->next != NULL && head->next->freq_t == 1)
     {
