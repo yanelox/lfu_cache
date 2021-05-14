@@ -21,7 +21,7 @@ struct freq_node;
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 struct freq_node* create_freq(int freq_dat, struct freq_node* prev_fr);
-struct lfu_node* create_lfu(DATA lfu_dat, struct freq_node* head);
+struct lfu_node* create_lfu(DATA* lfu_dat, struct freq_node* head);
 void remove_freq(struct freq_node* del);
 void remove_lfu(struct freq_node* head);
 void replace_lfu(struct lfu_node* cur_lfu);
@@ -68,7 +68,6 @@ int Free_Hash_Map (struct hash_map* Hash_Map);
 struct request_t      //change it like you want
 {
     int               data;
-    char              c;
     float             d;
 };
 
@@ -93,3 +92,14 @@ enum Const_Values
     cache_size = 2048
 
 };
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//LFU - part
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+DATA* GetPage (char* source);
+void PrintPage (DATA* page, char* source);
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+#define CGetPage() GetPage("stdin");
+#define CPrintPage(page) PrintPage(page, "stdout")
