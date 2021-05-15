@@ -184,6 +184,7 @@ struct hash_cell* Search_Data (struct hash_cell* cell, DATA* request)
 
     return NULL;
 }
+
 struct hash_cell* Search_Map (struct hash_map* Hash_Map, DATA* request)
 {
     int key = Hash_of_Data (request, Hash_Map->size);
