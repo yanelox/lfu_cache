@@ -7,10 +7,16 @@
 #include <string.h>
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-#define NUM 100000
+#define NUM 1000
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 typedef struct request_t DATA;
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+struct request_t      //change it like you want
+{
+    int               data;
+};
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 // List part
@@ -22,20 +28,15 @@ struct freq_node;
 //---------------------------------------------------------------------
 struct freq_node* create_freq(int freq_dat, struct freq_node* prev_fr);
 struct lfu_node* create_lfu(DATA lfu_dat, struct freq_node* head);
-void remove_freq (struct freq_node* del);
-void remove_lfu (struct freq_node* head);
-void replace_lfu (struct lfu_node* cur_lfu);
+void remove_freq(struct freq_node* del);
+void remove_lfu(struct freq_node* head);
+void replace_lfu(struct lfu_node* cur_lfu);
 struct freq_node* create_head();
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-struct request_t      //change it like you want
-{
-    int               data;
-};
-
 struct lfu_node
 {
-    struct request_t  data_t;
+    struct request_t data_t;
     struct lfu_node * next;
     struct lfu_node * prev;
 
@@ -87,8 +88,12 @@ struct hash_map
 };
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-// enum Const_Values
-// {
-//     cache_size = 2048
-
-// };
+//LFU - part
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+DATA* GetPage (FILE* f);
+void PrintPage (DATA* page, char* source);
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+#define CGetPage() GetPage(stdin);
+#define CPrintPage(page) PrintPage(page, "stdout")

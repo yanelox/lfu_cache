@@ -1,6 +1,34 @@
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include "Hash_Map.h"
+#include "LFU.h"
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+DATA* GetPage (FILE* f)
+{
+    assert (f);
+
+    DATA* res =  calloc (1, sizeof (DATA));
+
+    fscanf (f, "%d", &res->data);
+
+    return res;
+}
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+void PrintPage (DATA* page, char* source)
+{
+    assert (page);
+    assert (source);
+
+    FILE* f = NULL;
+
+    if (strcmp (source, "stdout") == 0)
+        f = stdout;
+
+    else
+        f = fopen (source, "w");
+
+    fprintf (f, "==========\n");
+    fprintf (f, "%d\n", page->data);
+    fprintf (f, "==========\n");
+}
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
