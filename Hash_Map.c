@@ -28,9 +28,9 @@ struct hash_map* Init_Hash_Map (int cache_size) //Constructor of hash table
     struct hash_map* Hash_Map = (struct hash_map*) calloc (1, sizeof (struct hash_map));
     assert (Hash_Map);
 
-    Hash_Map->size = cache_size;
+    Hash_Map->size = cache_size / 10; //number of collisions
 
-    Hash_Map->cells = (struct hash_cell*) calloc (cache_size, sizeof (struct hash_cell));
+    Hash_Map->cells = (struct hash_cell*) calloc (Hash_Map->size, sizeof (struct hash_cell));
     assert (Hash_Map->cells);
 
     return Hash_Map;
