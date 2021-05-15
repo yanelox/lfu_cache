@@ -7,7 +7,7 @@
 #include <string.h>
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-#define NUM 1000
+#define NUM 100
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 typedef struct request_t DATA;
@@ -68,6 +68,7 @@ struct hash_cell* Insert_Hash_Map (struct hash_map* Hash_Map, DATA* request);
 struct hash_cell* Search_Map (struct hash_map* Hash_Map, DATA* request);
 int Hash_of_Data (DATA* request, int cache_size);
 int Hash_of_Char (char* string, int len, int cache_size);
+int Del_Elem (struct hash_map* Hash_Map, DATA* request);
 int Free_Hash_Map (struct hash_map* Hash_Map);
 //int Test_Hash_Map (struct hash_map* Hash_Map);
 //---------------------------------------------------------------------
@@ -82,7 +83,7 @@ struct hash_cell
 
 struct hash_map
 {
-    struct hash_cell* cells;
+    struct hash_cell** cells;
     int               size;
 
 };
