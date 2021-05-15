@@ -23,15 +23,15 @@ static int pow_mod (int n, int k, int m) //This is just an auxiliary function
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-struct hash_map* Init_Hash_Map () //Constructor of hash table
+struct hash_map* Init_Hash_Map (int cache_sizze) //Constructor of hash table
 {
     struct hash_map* Hash_Map = (struct hash_map*) calloc (1, sizeof (struct hash_map));
     assert (Hash_Map);
 
-    Hash_Map->size = cache_size;
+    Hash_Map->size = cache_sizze;
 
-    Hash_Map->cells = (struct hash_cell*) calloc (cache_size, sizeof (struct hash_cell));
-    assert (Hash_Map->cells); //TODO: exception catcher 1111
+    Hash_Map->cells = (struct hash_cell*) calloc (cache_sizze, sizeof (struct hash_cell));
+    assert (Hash_Map->cells);
 
     return Hash_Map;
 }
@@ -74,7 +74,7 @@ int Insert_Hash_Map (struct hash_map* Hash_Map, DATA* request)
     {
         cell->item = Lfu_Node_Constuct ();
 
-        cell->item->data_t = request;
+        cell->item->data_t = *request;
         return 0;
     }
 
@@ -94,7 +94,7 @@ int Insert_Hash_Map (struct hash_map* Hash_Map, DATA* request)
 
         cell->next->prev = cell;
         cell->next->item = Lfu_Node_Constuct ();
-        cell->next->item->data_t = request;
+        cell->next->item->data_t = *request;
         return 0;
     }
     return 0;
@@ -166,13 +166,13 @@ struct hash_cell* Search_Data (struct hash_cell* cell, DATA* request)
 {
     while (cell->next)
     {
-        if (cell->item->data_t == request)
+        if (memcmp (request, &cell->item->data_t, sizeof (DATA)) == 0) //TODO: make comparative func
             return cell;
 
         cell = cell->next;
     }
     //In the next line I try to find an element in the last node of the list
-    if (cell->item->data_t == request)
+    if (memcmp (request, &cell->item->data_t, sizeof (DATA)) == 0)
             return cell;
 
     return NULL;

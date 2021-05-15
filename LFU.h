@@ -16,7 +16,6 @@ typedef struct request_t DATA;
 struct request_t      //change it like you want
 {
     int               data;
-    float             d;
 };
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -28,7 +27,7 @@ struct freq_node;
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 struct freq_node* create_freq(int freq_dat, struct freq_node* prev_fr);
-struct lfu_node* create_lfu(DATA* lfu_dat, struct freq_node* head);
+struct lfu_node* create_lfu(DATA lfu_dat, struct freq_node* head);
 void remove_freq(struct freq_node* del);
 void remove_lfu(struct freq_node* head);
 void replace_lfu(struct lfu_node* cur_lfu);
@@ -98,9 +97,9 @@ enum Const_Values
 //LFU - part
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-DATA* GetPage (char* source);
+DATA* GetPage (FILE* f);
 void PrintPage (DATA* page, char* source);
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-#define CGetPage() GetPage("stdin");
+#define CGetPage() GetPage(stdin);
 #define CPrintPage(page) PrintPage(page, "stdout")

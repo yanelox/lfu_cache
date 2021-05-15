@@ -1,22 +1,44 @@
 #include "LFU.h"
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-int main ()
+int main (int argc, char* argv[])
 {
+    assert (argc);
+
+    if (argc != 2)
+    {
+        printf ("Incorrect args\n");
+        return 0;
+    }
+
+    FILE* input = NULL;
+
+    if (strcmp (argv[1], "stdin") == 0)
+        input = stdin;
+
+    else
+        input = fopen (argv[1], "r");
+
+
+    int cache_sizze = 0;
     int count_pages = 0;
 
-    scanf ("%d", &count_pages);
+    fscanf (input, "%d%d", &cache_sizze, &count_pages);
 
-    DATA** pages = calloc (count_pages, sizeof (DATA*));
+
+    DATA* input_page = calloc(1, sizeof (DATA));
+
+    struct hash_map* HashTable = Init_Hash_Map (cache_sizze);
+
+    struct freq_node* List = create_head ();
+
 
     for (int i = 0; i < count_pages; ++i)
-        pages[i] = CGetPage();
+        ;
 
-    for (int i = 0; i < count_pages; ++i)
-        CPrintPage (pages[i]);
 
-    for (int i = 0; i < count_pages; ++i)
-        free (pages[i]);
+    free (input_page);
 
-    free (pages);
+    if (strcmp (argv[1], "stdin") != 0)
+        fclose (input);
 }
