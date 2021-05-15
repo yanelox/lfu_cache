@@ -3,27 +3,27 @@
 //---------------------------------------------------------------------
 static int pow_mod (int n, int k, int m) //This is just an auxiliary function
 {
-  int mult = 0, prod = 0;
+    int mult = 0, prod = 0;
 
-  if (n == 0 || n == 1 || k == 1)
-    return n;
-  if (k == 0)
-    return 1;
+    if (n == 0 || n == 1 || k == 1)
+        return n;
+    if (k == 0)
+        return 1;
 
-  mult = n;
-  prod = 1;
-  while (k > 0)
-  {
-    if ((k % 2) == 1)
-      prod = (prod * mult) % m;
-    mult = (mult * mult) % m;
-    k = k / 2;
-  }
-  return prod;
+    mult = n;
+    prod = 1;
+    while (k > 0)
+    {
+        if ((k % 2) == 1)
+        prod = (prod * mult) % m;
+        mult = (mult * mult) % m;
+        k = k / 2;
+    }
+    return prod;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-struct hash_map* Init_Hash_Map (int cache_sizze) //Constructor of hash table
+struct hash_map* Init_Hash_Map (int cache_size) //Constructor of hash table
 {
     struct hash_map* Hash_Map = (struct hash_map*) calloc (1, sizeof (struct hash_map));
     assert (Hash_Map);
@@ -40,17 +40,19 @@ struct hash_map* Init_Hash_Map (int cache_sizze) //Constructor of hash table
 int Free_Hash_Map (struct hash_map* Hash_Map) //Destructor of hash table
 {
     struct hash_cell* del = NULL;
-    for (int counter = 0; counter < cache_size; counter++)
+    for (int counter = 0; counter < Hash_Map->size; counter++)
     {
         del = Hash_Map->cells[counter].next;
         if (del)
         {
             while (del->next)
             {
+                // free (del->item);
                 del = del->next;
+                
                 free (del->prev);
-
             }
+            // free (del->item);
             free (del);
         }
     }
@@ -62,26 +64,30 @@ int Free_Hash_Map (struct hash_map* Hash_Map) //Destructor of hash table
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-int Insert_Hash_Map (struct hash_map* Hash_Map, DATA* request)
+struct hash_cell* Insert_Hash_Map (struct hash_map* Hash_Map, DATA* request)
 {
     assert (Hash_Map); //TODO: exception catcher
 
-    int key = Hash_of_Data (request);
+    int key = Hash_of_Data (request, Hash_Map->size);
     struct hash_cell* cell = Hash_Map->cells + key;
     struct hash_cell* start_cell = cell;
 
     if (!cell->item)
     {
-        cell->item = Lfu_Node_Constuct ();
+        printf ("\t\t\tEmpty cell!\n");
+        //cell->item = Lfu_Node_Constuct ();
 
-        cell->item->data_t = *request;
-        return 0;
+        //cell->item->data_t = *request;
+        return cell;
     }
 
-    cell = Search_Data (cell, request);
+    printf ("\t\tSearching in cells...\n");
+
+    cell = Search_Map (Hash_Map, request);
 
     if (!cell)
     {
+        printf ("\t\t\tNot found!\n");
         cell = start_cell;
         while (cell->next)
         {
@@ -93,15 +99,16 @@ int Insert_Hash_Map (struct hash_map* Hash_Map, DATA* request)
         assert (cell->next); //TODO: exception catcher
 
         cell->next->prev = cell;
-        cell->next->item = Lfu_Node_Constuct ();
-        cell->next->item->data_t = *request;
-        return 0;
+        //cell->next->item = Lfu_Node_Constuct ();
+        //cell->next->item->data_t = *request;
+        return cell;
     }
-    return 0;
+    printf ("\t\t\tHere yet!\n");
+    return NULL;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-int Hash_of_Data (DATA* request)
+int Hash_of_Data (DATA* request, int cache_size)
 {
     int key = 0;
     char* string = NULL;
@@ -110,44 +117,44 @@ int Hash_of_Data (DATA* request)
     string = (char*) calloc (req_size, sizeof (char));
     string = memcpy (string, request, req_size);
     
-    key = Hash_of_Char (string, req_size);
+    key = Hash_of_Char (string, req_size, cache_size);
     free (string);
 
     return key;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-int Hash_of_Int (int number)
+int Hash_of_Int (int number, int cache_size)
 {
-  int prime = 2909;
-  int coeff_1 = 211;
-  int coeff_2 = 521;
+    int prime = 2909;
+    int coeff_1 = 211;
+    int coeff_2 = 521;
 
-  int h_int = 0;
+    int h_int = 0;
 
-  h_int = ((coeff_1 * number + coeff_2) % prime) % cache_size;
+    h_int = ((coeff_1 * number + coeff_2) % prime) % cache_size;
 
-  return h_int;
+    return h_int;
 
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-int Hash_of_Char (char* string, int len)
+int Hash_of_Char (char* string, int len, int cache_size)
 {
-  int h_c = 0;
-  int coeff = 241;
-  int prime = 919;
-  int sum = 0;
+    int h_c = 0;
+    int coeff = 241;
+    int prime = 919;
+    int sum = 0;
 
-  for (int i = 0; i < len; i++)
-  {
-    sum += ( abs (string[i]) * pow_mod (coeff, len - i, prime)) % prime;
-  }
-  sum = sum % prime;
+    for (int i = 0; i < len; i++)
+    {
+        sum += ( abs (string[i]) * pow_mod (coeff, len - i, prime)) % prime;
+    }
+    sum = sum % prime;
 
-  h_c = Hash_of_Int (sum);
+    h_c = Hash_of_Int (sum, cache_size);
 
-  return h_c;
+    return h_c;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -166,16 +173,31 @@ struct hash_cell* Search_Data (struct hash_cell* cell, DATA* request)
 {
     while (cell->next)
     {
-        if (memcmp (request, &cell->item->data_t, sizeof (DATA)) == 0) //TODO: make comparative func
+        if (cell->item->data_t.data == request->data)
             return cell;
 
         cell = cell->next;
     }
     //In the next line I try to find an element in the last node of the list
-    if (memcmp (request, &cell->item->data_t, sizeof (DATA)) == 0)
+    if (cell->item->data_t.data == request->data)
             return cell;
 
     return NULL;
+}
+struct hash_cell* Search_Map (struct hash_map* Hash_Map, DATA* request)
+{
+    int key = Hash_of_Data (request, Hash_Map->size);
+
+    struct hash_cell* cell = Hash_Map->cells + key;
+
+    if (!cell->item)
+        return NULL;
+
+    printf ("\t\tSearching in cells...\n");
+
+    cell = Search_Data (cell, request);
+
+    return cell;
 }
 //TODO: print table func :)
 // int Test_Hash_Map (struct hash_map* Hash_Map)
