@@ -20,15 +20,15 @@ int main (int argc, char* argv[])
         input = fopen (argv[1], "r");
 
 
-    int cache_sizze = 0;
+    int cache_size = 0;
     int count_pages = 0;
 
-    fscanf (input, "%d%d", &cache_sizze, &count_pages);
+    fscanf (input, "%d%d", &cache_size, &count_pages);
 
 
     DATA* input_page = calloc(1, sizeof (DATA));
 
-    struct hash_map* HashTable = Init_Hash_Map (cache_sizze);
+    struct hash_map* HashTable = Init_Hash_Map (cache_size);
 
     struct freq_node* List = create_head ();
 
