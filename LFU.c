@@ -1,13 +1,13 @@
 #include "LFU.h"
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-DATA* GetPage (FILE* f)
+DATA GetPage (FILE* f)
 {
     assert (f);
 
-    DATA* res =  calloc (1, sizeof (DATA));
+    DATA res = {0};
 
-    fscanf (f, "%d", &res->data);
+    fscanf (f, "%d", &res.data);
 
     return res;
 }

@@ -36,19 +36,19 @@ int main (int argc, char* argv[])
 
     for (int i = 0; i < count_pages; ++i)
     {
-        input_page = GetPage (input);
+        *input_page = GetPage (input);
 
         struct hash_cell* found_cell = Search_Map (HashTable, input_page);
-
+        
         if (!found_cell)
         {
             ++cache_fullness;
 
             if (cache_fullness > cache_size)
             {
-                remove_lfu (List);
+                Del_Elem (HashTable, &List->next->child->data_t);
 
-                //TODO: add removing from hash taable
+                remove_lfu (List);
 
                 --cache_fullness;
             }
@@ -66,8 +66,10 @@ int main (int argc, char* argv[])
         }
     }
 
-
+    Free_Hash_Map (HashTable);
     free (input_page);
+    free (List->next);
+    free (List);
 
     if (strcmp (argv[1], "stdin") != 0)
         fclose (input);
