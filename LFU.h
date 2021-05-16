@@ -33,6 +33,7 @@ void RemoveLfu(struct freq_node* head);
 void ReplaceLfu(struct lfu_node* cur_lfu);
 struct freq_node* CreateHead();
 void DeleteList(struct freq_node* head);
+void ListPrint(struct freq_node* head);
 void TestCreateHead();
 void TestCreateFreq();
 void TestCreateLfu();
@@ -76,7 +77,7 @@ int HashofData (DATA* request, int cache_size);
 int HashofChar (char* string, int len, int cache_size);
 int DelElem (struct hash_map* Hash_Map, DATA* request);
 int FreeHashMap (struct hash_map* Hash_Map);
-//int Test_Hash_Map (struct hash_map* Hash_Map);
+int PrintHashMap (struct hash_map* Hash_Map);
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 struct hash_cell

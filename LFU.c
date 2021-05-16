@@ -76,7 +76,7 @@ int InsertLFU (LFU* cache, DATA* request)
         struct hash_cell* created_cell = InsertHashMap (cache->HashTable, request);
         
         created_cell->item = created_lfu;
-        printf ("%p\n", SearchMap (cache->HashTable, &tmp));
+        // printf ("%p\n", SearchMap (cache->HashTable, &tmp));
     }
 
     else

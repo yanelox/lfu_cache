@@ -36,7 +36,12 @@ int main (int argc, char* argv[])
         *input_page = GetPage (input);
 
         count_hit += InsertLFU (Cache, input_page);
+
+        printf ("=============");
+        PrintHashMap (Cache->HashTable);
+        printf ("=============");
     }
+
     printf ("count hits = %d\n", count_hit);
 
     FreeLFU (Cache);

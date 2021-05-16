@@ -183,7 +183,7 @@ struct hash_cell* SearchMap (struct hash_map* Hash_Map, DATA* request)
 
     if (!cell->item)
         return NULL;
-    printf ("im here\n  ");
+    // printf ("im here\n  ");
     cell = SearchData (cell, request);
 
     return cell;
@@ -226,38 +226,27 @@ int DelElem (struct hash_map* Hash_Map, DATA* request)
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-// int Test_Hash_Map (struct hash_map* Hash_Map)
-// {
-//     FILE* fp;
-//     int res = 0;
-//     struct hash_cell cell;
-//     struct hash_cell* cell_next = NULL;
+int PrintHashMap (struct hash_map* Hash_Map)
+{
+    assert (Hash_Map);
 
-//     const char* name = "text.map";
-    
-//     fp = fopen (name, "w");
+    int res = 0;
+    struct hash_cell* cell;
 
-//     for (int i = 0; i < NUM; i++)
-//     {
- 
-//         fprintf (fp, "#%d\n\tdata:\n", i);
+    for (int i = 0; i < Hash_Map->size; i++)
+    {
+        printf ("===\n%d)\n", i);
         
-//         res = Hash_of_Data (i);
-//         cell = Hash_Map->cells[res];
+        cell = Hash_Map->cells[i];
 
-//         if (cell.next)
-//             cell_next = cell.next;
+        while (cell)
+        {
+            if (cell->item)
+                printf ("%d ", cell->item->data_t.data);
 
-//         if (cell.item)
-//             fprintf (fp, "\t\t%d\n", cell.item->data_t);
+            cell = cell->next;
+        }
 
-//         while (cell_next)
-//         {
-//             if (cell_next->item)
-//                 fprintf (fp, "\t\t%d\n", cell_next->item->data_t);
-//             cell_next = cell_next->next;
-//         }
-//     }
-
-//     fclose (fp);
-// }
+        printf ("\n");
+    }
+}
