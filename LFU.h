@@ -68,6 +68,7 @@ struct hash_cell* Insert_Hash_Map (struct hash_map* Hash_Map, DATA* request);
 struct hash_cell* Search_Map (struct hash_map* Hash_Map, DATA* request);
 int Hash_of_Data (DATA* request, int cache_size);
 int Hash_of_Char (char* string, int len, int cache_size);
+int Hash_of_Int (int number, int cache_size);
 int Del_Elem (struct hash_map* Hash_Map, DATA* request);
 int Free_Hash_Map (struct hash_map* Hash_Map);
 //int Test_Hash_Map (struct hash_map* Hash_Map);
