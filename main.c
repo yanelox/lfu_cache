@@ -6,12 +6,12 @@ int main ()
     struct hash_map* Hash_Map = NULL;
     struct hash_cell* cell = NULL;
     DATA* requests = NULL;
-    int cache_size = 100;
-    Hash_Map = Init_Hash_Map (cache_size);
+    int cache_size = 10;
+    Hash_Map = InitHashMap (cache_size);
 
     requests = (DATA*) calloc (NUM, sizeof (DATA));
 
-    for (int i = 0; i < NUM; i++)
+    for (int i = 0; i < 10; i++)
     {
         requests[i].data = i;
     }
@@ -19,15 +19,22 @@ int main ()
     
     for (int i = 0; i < NUM; i++)
     {   
-        Insert_Hash_Map (Hash_Map, requests + i);
+        InsertHashMap (Hash_Map, requests + i);
     }
+
+    for (int i = 0; i < NUM; i++)
+    {   
+        InsertHashMap (Hash_Map, requests + i);
+    }
+
+    PrintHashMap (Hash_Map);
     
     for (int i = 0; i < NUM; i++)
     {   
-        Del_Elem (Hash_Map, requests + i);
+        DelElem (Hash_Map, requests + i);
     }
     
-    Free_Hash_Map (Hash_Map);
+    FreeHashMap (Hash_Map);
 
     free (requests);
     

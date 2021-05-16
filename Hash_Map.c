@@ -1,6 +1,8 @@
 #include "LFU.h"
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
+struct lfu_node* Lfu_Node_Constuct () ;
+
 static int pow_mod (int n, int k, int m) //This is just an auxiliary function
 {
     int mult = 0, prod = 0;
@@ -81,6 +83,8 @@ struct hash_cell* InsertHashMap (struct hash_map* Hash_Map, DATA* request)
 
     if (!cell->item)
     {   
+        cell->item = Lfu_Node_Constuct ();
+        cell->item->data_t = *request;
         return cell;
     }
 
@@ -99,11 +103,23 @@ struct hash_cell* InsertHashMap (struct hash_map* Hash_Map, DATA* request)
         assert (cell->next); //TODO: exception catcher
 
         cell->next->prev = cell;
+        cell->next->item = Lfu_Node_Constuct ();
+        cell->next->item->data_t = *request;
     
         return cell;
     }
     
     return NULL;
+}
+
+struct lfu_node* Lfu_Node_Constuct () 
+{   
+    struct lfu_node* node = NULL;
+
+    node = (struct lfu_node*) calloc (1, sizeof (struct lfu_node));
+    assert (node);
+
+    return node;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
