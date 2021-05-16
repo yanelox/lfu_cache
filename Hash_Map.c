@@ -229,7 +229,7 @@ int DelElem (struct hash_map* Hash_Map, DATA* request)
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-int PrintHashMap (struct hash_map* Hash_Map)
+int PrintHashMap (struct hash_map* Hash_Map, FILE* f)
 {
     assert (Hash_Map);
 
@@ -238,19 +238,19 @@ int PrintHashMap (struct hash_map* Hash_Map)
 
     for (int i = 0; i < Hash_Map->size; i++)
     {
-        printf ("===\n%d)\n", i);
+        fprintf (f, "===\n%d)\n", i);
         
         cell = Hash_Map->cells[i];
 
         while (cell)
         {
             if (cell->item)
-                printf ("%d ", cell->item->data_t.data);
+                fprintf (f, "%d ", cell->item->data_t.data);
 
             cell = cell->next;
         }
 
-        printf ("\n");
+        fprintf (f, "\n");
     }
 }
 //---------------------------------------------------------------------

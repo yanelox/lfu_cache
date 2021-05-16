@@ -171,6 +171,7 @@ void ReplaceLfu(struct lfu_node* cur_lfu)
     return;
 }
 //---------------------------------------------------------------------
+// Initialization of head of list
 //---------------------------------------------------------------------
 struct freq_node* CreateHead()
 {
@@ -184,6 +185,7 @@ struct freq_node* CreateHead()
     return head;
 }
 //---------------------------------------------------------------------
+// Func with free's list
 //---------------------------------------------------------------------
 void DeleteList(struct freq_node* head)
 {
@@ -214,35 +216,39 @@ void DeleteList(struct freq_node* head)
     return;
 }
 //---------------------------------------------------------------------
+// Func which print list to console
 //---------------------------------------------------------------------
-void ListPrint(struct freq_node* head)
+void ListPrint(struct freq_node* head, FILE* f)
 {
     struct freq_node* cur_f = head;
     struct lfu_node* cur_l;
 
-    if(cur_f->next == NULL)
-        printf("The list is empty -_-");
+    if (!head->next)
+        fprintf (f, "Empty list\n");
 
-    while(cur_f->next != NULL)
+    else
     {
-        cur_f = cur_f->next;
-        printf("freq %d: ", cur_f->freq_t);
+        cur_f = head->next;
 
-        if(cur_f->child = NULL)
-            printf("ERRO_OR there is no elements");
-        else
+        while (cur_f)
         {
+            fprintf (f, "freq %d)\n", cur_f->freq_t);
+
             cur_l = cur_f->child;
 
-            while(cur_l->next != NULL)
+            while (cur_l)
             {
-                printf("%d ", cur_l->data_t.data);
+                fprintf (f, "%d ", cur_l->data_t.data);
+
                 cur_l = cur_l->next;
             }
 
-            printf("%d;\n", cur_l->data_t.data);
+            cur_f = cur_f->next;
+
+            fprintf (f, "\n");
         }
     }
+
     return;
 }
 //---------------------------------------------------------------------
