@@ -4,6 +4,7 @@
 //---------------------------------------------------------------------
 int Hash_Int_Test ();
 int Hash_Char_Test ();
+int Init_Func_Test ();
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 static int pow_mod (int n, int k, int m) //This is just an auxiliary function
@@ -33,6 +34,7 @@ int main ()
     int err = 0;
     err = Hash_Int_Test ();
     err = Hash_Char_Test ();
+    err = Init_Func_Test ();
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -130,17 +132,19 @@ int Hash_Char_Test ()
 
        if (exp_h_c != h_c)
         {
-            printf ("\t%d test falled:\n\tString = [%s]\n\tCache_size = %d\n\t\tWrong correspondence of expected result [%d] with gotten [%d]\n", i, string, cache_size, exp_h_c, h_c);
+            printf ("\t%d test falled:\n\tString = [%s]\n\tCache_size = %d\n\t\t"
+                    "Wrong correspondence of expected result [%d] with gotten [%d]\n",
+                    i + 1, string, cache_size, exp_h_c, h_c);
             continue;
         }
-        printf ("\t\t#%d Test is OK\n", i);
+        printf ("\t\t#%d Test is OK\n", i + 1);
         if (i == num_tests)
             printf ("\t\t\t\t    ***Tests passed***\n");
     } 
 
     printf ("\n\t\t\t\t *Checking generated tests*\n");
 
-    for (int i = 1; i <= num_tests; i++)
+    for (int i = 0; i < num_tests; i++)
     {   
         len = rand () % 100;
         for (int i = 0; i < len; i++)
@@ -161,13 +165,130 @@ int Hash_Char_Test ()
 
         if (exp_h_c != h_c)
         {
-            printf ("\t%d test falled:\n\tString = [%s]\n\tCache_size = %d\n\t\tWrong correspondence of expected result [%d] with gotten [%d]\n", i, string, cache_size, exp_h_c, h_c);
+            printf ("\t%d test falled:\n\tString = [%s]\n\tCache_size = %d\n\t\t"
+                    "Wrong correspondence of expected result [%d] with gotten [%d]\n", 
+                    i + 1, string, cache_size, exp_h_c, h_c);
             continue;
         }
+        printf ("\t\t#%d Test is OK\n", i + 1);
+        if (i == num_tests)
+            printf ("\t\t\t\t    ***Tests passed***\n");
+    }
+
+    fclose (f);
+}
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+int Init_Func_Test ()
+{
+    struct hash_map* test_map = NULL;  
+    int cache_size = 0;
+    int num_tests = 5;
+    FILE* f;
+
+    f = fopen ("INIT.txt", "r");
+
+    printf ("\n\t\t\t\t***Testing of Init_Hash_Map***\n\n");
+    printf ("\t\t\t\t  *Checking hand-made tests*\n");
+
+    for (int i = 1; i <= num_tests; i++)
+    {
+        fscanf (f, "%d", &cache_size);
+
+        test_map = Init_Hash_Map (cache_size);
+
+        if (!test_map)
+            printf ("\t%d test falled:\n\tCache_size = %d\n\t\t"
+                    "Init_Hash_Map returned null pointer\n",
+                    i, cache_size);
+        
+        else if (!test_map->size)
+            printf ("\t%d test falled:\n\tCache_size = %d\n\t"
+                    "[test_map] = %p\n\t\t"
+                    "Zero size of Hash_Map\n",
+                    i, cache_size, test_map);
+                    
+        else if (!test_map->cells)
+            printf ("\t%d test falled:\n\tCache_size = %d\n\t"
+                    "[test_map] = %p\n\t\t"
+                    "test_map->cells is a null-pointing array\n",
+                    i, cache_size, test_map);
+
+        else for (int counter = 0; counter < test_map->size; counter++)
+            if (!test_map->cells[counter])
+            {
+                printf ("\t%d test falled:\n\tCache_size = %d\n\t"
+                        "[test_map] = %p\n\t\t"
+                        "test_map->cells[%d] is a null-pointing cell\n\t\t",
+                        i, cache_size, test_map, counter);
+            }
+        for (int i = 0; test_map && i < test_map->size; i++)
+            free (test_map->cells[i]);
+
+        if (test_map)
+            free (test_map->cells);
+
+        free (test_map);
+        
+        printf ("\t\t#%d Test is OK\n", i);
+
+
+        if (i == num_tests)
+            printf ("\t\t\t\t    ***Tests passed***\n");
+        
+    }
+
+    printf ("\n\t\t\t\t *Checking generated tests*\n");
+    for (int i = 1; i <= num_tests; i++)
+    {
+        cache_size = rand () % 1000;
+
+        test_map = Init_Hash_Map (cache_size);
+
+        if (!test_map)
+            printf ("\t%d test falled:\n\tCache_size = %d\n\t\t"
+                    "Init_Hash_Map returned null pointer\n",
+                    i, cache_size);
+        
+        else if (!test_map->size)
+            printf ("\t%d test falled:\n\tCache_size = %d\n\t"
+                    "[test_map] = %p\n\t\t"
+                    "Zero size of Hash_Map\n",
+                    i, cache_size, test_map);
+                    
+        else if (!test_map->cells)
+            printf ("\t%d test falled:\n\tCache_size = %d\n\t"
+                    "[test_map] = %p\n\t\t"
+                    "test_map->cells is a null-pointing array\n",
+                    i, cache_size, test_map);
+
+        else for (int counter = 0; counter < test_map->size; counter++)
+            if (!test_map->cells[counter])
+            {
+                printf ("\t%d test falled:\n\tCache_size = %d\n\t"
+                        "[test_map] = %p\n\t\t"
+                        "test_map->cells[%d] is a null-pointing cell\n\t\t",
+                        i, cache_size, test_map, counter);
+                break;
+            }
+
+        for (int i = 0; test_map && i < test_map->size; i++)
+            free (test_map->cells[i]);
+            
+        if (test_map)
+            free (test_map->cells);
+
+        free (test_map);
+
         printf ("\t\t#%d Test is OK\n", i);
         if (i == num_tests)
             printf ("\t\t\t\t    ***Tests passed***\n");
     }
 
     fclose (f);
+}
+
+int Test_Search_Map ()
+{
+
 }
