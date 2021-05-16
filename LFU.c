@@ -39,7 +39,7 @@ LFU* LfuConstruct (int cache_size)
     assert (res);
 
     res->HashTable = Init_Hash_Map (cache_size);
-    res->List      = create_head   ();
+    res->List      = CreateHead    ();
 
     res->cache_size    = cache_size;
     res->cache_fullnes = 0;
@@ -63,12 +63,12 @@ void InsertLFU (LFU* cache, DATA* request)
         {
             Del_Elem (cache->HashTable, &cache->List->next->child->data_t); // we should delete elem with
                                                                             // the lowest frequency        
-            remove_lfu (cache->List);
+            RemoveLfu (cache->List);
 
             cache->cache_fullnes--;
         }
 
-        struct lfu_node* created_lfu = create_lfu (*request, cache->List);
+        struct lfu_node* created_lfu = CreateLfu (*request, cache->List);
 
         struct hash_cell* created_cell = Insert_Hash_Map (cache->HashTable, request);
 
@@ -77,7 +77,7 @@ void InsertLFU (LFU* cache, DATA* request)
 
     else
     {
-        replace_lfu (found_cell->item);
+        ReplaceLfu (found_cell->item);
     }
 }
 //---------------------------------------------------------------------
@@ -88,15 +88,7 @@ void FreeLFU (LFU* cache)
 
     Free_Hash_Map (cache->HashTable);
 
-    struct freq_node* node = cache->List;
-    struct freq_node* tmp_node = cache->List;
-
-    while (node)
-    {
-        tmp_node = node;
-        node = node->next;
-        free (tmp_node);
-    }
+    DeleteList (cache->List);   
 
     free (cache);
 }

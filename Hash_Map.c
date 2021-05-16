@@ -54,18 +54,21 @@ int Free_Hash_Map (struct hash_map* Hash_Map) //Destructor of hash table
             while (del->next)
             {
                 
-                free (del->item);
+                // free (del->item);
+                // del->item = NULL;
                 del = del->next;
                 free (del->prev);
             }
-            free (del->item);
+            // free (del->item);
+            // del->item = NULL;
             free (del);
             
         }
     }
     for (int i = 0; i < Hash_Map->size; i++)
     {
-        free (Hash_Map->cells[i]->item);
+        // free (Hash_Map->cells[i]->item);
+        // Hash_Map->cells[i]->item = NULL;
         free (Hash_Map->cells[i]);
     }
 
@@ -209,8 +212,7 @@ struct hash_cell* Search_Map (struct hash_map* Hash_Map, DATA* request)
 
     return cell;
 }
-//---------------------------------------------------------------------
-//---------------------------------------------------------------------
+
 int Del_Elem (struct hash_map* Hash_Map, DATA* request)
 {
     int key = Hash_of_Data (request, Hash_Map->size);
@@ -218,6 +220,7 @@ int Del_Elem (struct hash_map* Hash_Map, DATA* request)
     
     if (!cell)
     {
+        
         return 0;
     }
 
@@ -226,14 +229,15 @@ int Del_Elem (struct hash_map* Hash_Map, DATA* request)
         
         if (cell->next)
         { 
+        
             Hash_Map->cells[key] = cell->next;
 
             Hash_Map->cells[key]->prev = NULL;
+            
+            // free(cell->item);
+            free (cell);
         }
-
-        free (cell->item);
-        free (cell);
-              
+           
         return 0;
     }
 
@@ -241,7 +245,7 @@ int Del_Elem (struct hash_map* Hash_Map, DATA* request)
         cell->next->prev = cell->prev;
 
     cell->prev->next = cell->next;
-    free (cell->item);
+    // free (cell->item);
     free (cell);
 
     return 0;

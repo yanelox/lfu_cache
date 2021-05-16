@@ -188,34 +188,29 @@ struct freq_node* CreateHead()
 void DeleteList(struct freq_node* head)
 {
     struct freq_node* cur_f = head;
+    struct freq_node* ftmp;
     struct lfu_node* cur_l;
+    struct lfu_node* ltmp;
 
-    while(cur_f->next != NULL)
+    while (cur_f)
     {
-        if(cur_f->child == NULL)
-        {
-            cur_f = cur_f->next;
-            free(cur_f->prev);
-        }
-
-        else
+        if (cur_f->child)
         {
             cur_l = cur_f->child;
 
-            while(cur_l->next != NULL)
-                cur_l = cur_l->next;
-
-            while(cur_l->prev != NULL)
+            while (cur_l)
             {
-                cur_l = cur_l->prev;
-                free(cur_l->next);
+                ltmp = cur_l;
+                cur_l = cur_l->next;
+                free (ltmp);
             }
-
-            free(cur_l);
         }
+
+        ftmp = cur_f;
+        cur_f = cur_f->next;
+        free (ftmp);
     }
 
-    free(cur_f);
     return;
 }
 //---------------------------------------------------------------------
