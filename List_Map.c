@@ -176,7 +176,7 @@ struct freq_node* CreateHead()
 {
     struct freq_node* head;
 
-    head = (struct freq_node*)calloc(1, sizeof(struct freq_node));
+    head = (struct freq_node*)calloc (1, sizeof(struct freq_node));
     head->next = NULL;
     head->prev = NULL;
     head->child = NULL;

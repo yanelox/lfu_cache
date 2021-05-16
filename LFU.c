@@ -38,8 +38,8 @@ LFU* LfuConstruct (int cache_size)
 
     assert (res);
 
-    res->HashTable = Init_Hash_Map (cache_size);
-    res->List      = CreateHead    ();
+    res->HashTable = InitHashMap (cache_size);
+    res->List      = CreateHead   ();
 
     res->cache_size    = cache_size;
     res->cache_fullnes = 0;
@@ -48,37 +48,44 @@ LFU* LfuConstruct (int cache_size)
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-void InsertLFU (LFU* cache, DATA* request)
-{
+int InsertLFU (LFU* cache, DATA* request)
+{   
+    int res = 0;
+
     assert (cache);
     assert (request);
-
-    struct hash_cell* found_cell = Search_Map (cache->HashTable, request);
-        
+    printf ("====\n %d\n", request->data);
+    struct hash_cell* found_cell = SearchMap (cache->HashTable, request);
+    
     if (!found_cell)
     {
         cache->cache_fullnes++;
 
         if (cache->cache_fullnes > cache->cache_size)
         {
-            Del_Elem (cache->HashTable, &cache->List->next->child->data_t); // we should delete elem with
+            DelElem (cache->HashTable, &cache->List->next->child->data_t); // we should delete elem with
                                                                             // the lowest frequency        
             RemoveLfu (cache->List);
 
             cache->cache_fullnes--;
         }
-
+        DATA tmp = {1};
+        
         struct lfu_node* created_lfu = CreateLfu (*request, cache->List);
-
-        struct hash_cell* created_cell = Insert_Hash_Map (cache->HashTable, request);
-
+        // printf ("1)%p\n", SearchMap (cache->HashTable, &tmp));
+        struct hash_cell* created_cell = InsertHashMap (cache->HashTable, request);
+        
         created_cell->item = created_lfu;
+        printf ("%p\n", SearchMap (cache->HashTable, &tmp));
     }
 
     else
     {
         ReplaceLfu (found_cell->item);
+        res = 1;
     }
+
+    return res;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -86,9 +93,9 @@ void FreeLFU (LFU* cache)
 {
     assert (cache);
 
-    Free_Hash_Map (cache->HashTable);
+    FreeHashMap (cache->HashTable);
 
-    DeleteList (cache->List);   
+    DeleteList (cache->List);
 
     free (cache);
 }

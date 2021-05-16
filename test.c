@@ -3,6 +3,6 @@
 //---------------------------------------------------------------------
 int main ()
 {
-    // TestPageFunc ("test_pages.txt");
-    TestLFUFunc ("test_lfu.txt");
+    TestPageFunc ("stdout");
+    TestLFUFunc  ("stdout");
 }

@@ -22,6 +22,7 @@ int main (int argc, char* argv[])
 
     int cache_size = 0;
     int count_pages = 0;
+    int count_hit = 0;
 
     fscanf (input, "%d%d", &cache_size, &count_pages);
 
@@ -30,13 +31,13 @@ int main (int argc, char* argv[])
 
     LFU* Cache = LfuConstruct (cache_size);
 
-
     for (int i = 0; i < count_pages; ++i)
     {
         *input_page = GetPage (input);
 
-        InsertLFU (Cache, input_page);
+        count_hit += InsertLFU (Cache, input_page);
     }
+    printf ("count hits = %d\n", count_hit);
 
     FreeLFU (Cache);
 

@@ -68,15 +68,14 @@ struct freq_node
 struct hash_cell;
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-struct hash_map* Init_Hash_Map (int cache_size);
-struct lfu_node* Lfu_Node_Constuct ();
-struct hash_cell* Search_Data (struct hash_cell* cell, DATA* request);
-struct hash_cell* Insert_Hash_Map (struct hash_map* Hash_Map, DATA* request);
-struct hash_cell* Search_Map (struct hash_map* Hash_Map, DATA* request);
-int Hash_of_Data (DATA* request, int cache_size);
-int Hash_of_Char (char* string, int len, int cache_size);
-int Del_Elem (struct hash_map* Hash_Map, DATA* request);
-int Free_Hash_Map (struct hash_map* Hash_Map);
+struct hash_map* InitHashMap (int cache_size);
+struct hash_cell* SearchData (struct hash_cell* cell, DATA* request);
+struct hash_cell* InsertHashMap (struct hash_map* Hash_Map, DATA* request);
+struct hash_cell* SearchMap (struct hash_map* Hash_Map, DATA* request);
+int HashofData (DATA* request, int cache_size);
+int HashofChar (char* string, int len, int cache_size);
+int DelElem (struct hash_map* Hash_Map, DATA* request);
+int FreeHashMap (struct hash_map* Hash_Map);
 //int Test_Hash_Map (struct hash_map* Hash_Map);
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -112,7 +111,7 @@ struct lfu_c
 DATA GetPage (FILE* f);
 void PrintPage (DATA* page, char* source);
 LFU* LfuConstruct (int cache_size);
-void InsertLFU (LFU* cache, DATA* request);
+int InsertLFU (LFU* cache, DATA* request);
 void FreeLFU (LFU* cache);
 void LFUDump (LFU* cache);
 //---------------------------------------------------------------------

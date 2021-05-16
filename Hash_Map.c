@@ -23,7 +23,7 @@ static int pow_mod (int n, int k, int m) //This is just an auxiliary function
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-struct hash_map* Init_Hash_Map (int cache_size) //Constructor of hash table
+struct hash_map* InitHashMap (int cache_size) //Constructor of hash table
 {
     struct hash_map* Hash_Map = (struct hash_map*) calloc (1, sizeof (struct hash_map));
     assert (Hash_Map);
@@ -43,7 +43,7 @@ struct hash_map* Init_Hash_Map (int cache_size) //Constructor of hash table
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-int Free_Hash_Map (struct hash_map* Hash_Map) //Destructor of hash table
+int FreeHashMap (struct hash_map* Hash_Map) //Destructor of hash table
 {
     struct hash_cell* del = NULL;
     for (int counter = 0; counter < Hash_Map->size; counter++)
@@ -53,24 +53,16 @@ int Free_Hash_Map (struct hash_map* Hash_Map) //Destructor of hash table
         {
             while (del->next)
             {
-                
-                // free (del->item);
-                // del->item = NULL;
                 del = del->next;
                 free (del->prev);
             }
-            // free (del->item);
-            // del->item = NULL;
+
             free (del);
-            
         }
     }
+
     for (int i = 0; i < Hash_Map->size; i++)
-    {
-        // free (Hash_Map->cells[i]->item);
-        // Hash_Map->cells[i]->item = NULL;
         free (Hash_Map->cells[i]);
-    }
 
     free (Hash_Map->cells);
 
@@ -79,23 +71,20 @@ int Free_Hash_Map (struct hash_map* Hash_Map) //Destructor of hash table
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-struct hash_cell* Insert_Hash_Map (struct hash_map* Hash_Map, DATA* request)
+struct hash_cell* InsertHashMap (struct hash_map* Hash_Map, DATA* request)
 {
     assert (Hash_Map); //TODO: exception catcher
 
-    int key = Hash_of_Data (request, Hash_Map->size);
+    int key = HashofData (request, Hash_Map->size);
     struct hash_cell* cell = Hash_Map->cells[key];
     struct hash_cell* start_cell = cell;
 
     if (!cell->item)
-    {
-        cell->item = Lfu_Node_Constuct ();
-        cell->item->data_t = *request;
-        
+    {   
         return cell;
     }
 
-    cell = Search_Data (cell, request);
+    cell = SearchData (cell, request);
 
     if (!cell)
     {
@@ -110,8 +99,6 @@ struct hash_cell* Insert_Hash_Map (struct hash_map* Hash_Map, DATA* request)
         assert (cell->next); //TODO: exception catcher
 
         cell->next->prev = cell;
-        cell->next->item = Lfu_Node_Constuct ();
-        cell->next->item->data_t = *request;
     
         return cell;
     }
@@ -120,7 +107,7 @@ struct hash_cell* Insert_Hash_Map (struct hash_map* Hash_Map, DATA* request)
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-int Hash_of_Data (DATA* request, int cache_size)
+int HashofData (DATA* request, int cache_size)
 {
     int key = 0;
     char* string = NULL;
@@ -130,14 +117,14 @@ int Hash_of_Data (DATA* request, int cache_size)
     string = memcpy (string, request, req_size);
 
    
-    key = Hash_of_Char (string, req_size, cache_size);
+    key = HashofChar (string, req_size, cache_size);
     free (string);
      
     return key;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-int Hash_of_Int (int number, int cache_size)
+int HashofInt (int number, int cache_size)
 {
     int prime = 2909;
     int coeff_1 = 211;
@@ -152,7 +139,7 @@ int Hash_of_Int (int number, int cache_size)
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-int Hash_of_Char (char* string, int len, int cache_size)
+int HashofChar (char* string, int len, int cache_size)
 {
     int h_c = 0;
     int coeff = 241;
@@ -165,24 +152,13 @@ int Hash_of_Char (char* string, int len, int cache_size)
     }
     sum = sum % prime;
 
-    h_c = Hash_of_Int (sum, cache_size);
+    h_c = HashofInt (sum, cache_size);
 
     return h_c;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-struct lfu_node* Lfu_Node_Constuct () 
-{   
-    struct lfu_node* node = NULL;
-
-    node = (struct lfu_node*) calloc (1, sizeof (struct lfu_node));
-    assert (node);
-
-    return node;
-}
-//---------------------------------------------------------------------
-//---------------------------------------------------------------------
-struct hash_cell* Search_Data (struct hash_cell* cell, DATA* request)
+struct hash_cell* SearchData (struct hash_cell* cell, DATA* request)
 {
     while (cell->next)
     {
@@ -199,28 +175,28 @@ struct hash_cell* Search_Data (struct hash_cell* cell, DATA* request)
     return NULL;
 }
 
-struct hash_cell* Search_Map (struct hash_map* Hash_Map, DATA* request)
+struct hash_cell* SearchMap (struct hash_map* Hash_Map, DATA* request)
 {
-    int key = Hash_of_Data (request, Hash_Map->size);
+    int key = HashofData (request, Hash_Map->size);
     
     struct hash_cell* cell = Hash_Map->cells[key];
 
     if (!cell->item)
         return NULL;
-
-    cell = Search_Data (cell, request);
+    printf ("im here\n  ");
+    cell = SearchData (cell, request);
 
     return cell;
 }
-
-int Del_Elem (struct hash_map* Hash_Map, DATA* request)
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+int DelElem (struct hash_map* Hash_Map, DATA* request)
 {
-    int key = Hash_of_Data (request, Hash_Map->size);
-    struct hash_cell* cell = Search_Map (Hash_Map, request);
+    int key = HashofData (request, Hash_Map->size);
+    struct hash_cell* cell = SearchMap (Hash_Map, request);
     
     if (!cell)
     {
-        
         return 0;
     }
 
@@ -229,12 +205,10 @@ int Del_Elem (struct hash_map* Hash_Map, DATA* request)
         
         if (cell->next)
         { 
-        
             Hash_Map->cells[key] = cell->next;
 
             Hash_Map->cells[key]->prev = NULL;
             
-            free(cell->item);
             free (cell);
         }
            
@@ -245,12 +219,13 @@ int Del_Elem (struct hash_map* Hash_Map, DATA* request)
         cell->next->prev = cell->prev;
 
     cell->prev->next = cell->next;
-    free (cell->item);
+    
     free (cell);
 
     return 0;
 }
-//TODO: print table func :)
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // int Test_Hash_Map (struct hash_map* Hash_Map)
 // {
 //     FILE* fp;

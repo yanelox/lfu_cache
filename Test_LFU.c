@@ -1,73 +1,79 @@
 #include "LFU.h"
+#include <time.h>
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 void TestPageFunc (char* file)
 {
-    printf ("Page reading and printing tests\n");
+    
+    assert (file);
 
-    FILE* f = fopen (file, "r");
+    FILE* f;
 
-    assert (f);
+    if (strcmp (file, "stdout") == 0)
+        f = stdout;
 
-    int count = 0;
-    assert (fscanf (f, "%d", &count) == 1);
+    else
+        f = fopen (file, "w");
+
+    int count  = 10000000;
 
     DATA* pages = calloc (count, sizeof (DATA));
-    assert (pages);
 
-    for (int i = 0; i < count; ++i)
-        pages[i] = GetPage (f);
-
-    fclose (f);
-
-    for (int i = 0; i < count; ++i)
-        CPrintPage (pages + i);
 
     printf ("Randomly generated pages\n");
 
     for (int i = 0; i < count; ++i)
-        pages[i].data = rand () % 1000;
+        pages[i].data = rand () % 10000;
     
     for (int i = 0; i < count; ++i)
         CPrintPage (pages + i);
 
+
     free (pages);
+
+    if (strcmp (file, "stdout"))
+        fclose (f);   
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 void TestLFUFunc (char* file)
 {
-    printf ("Test LFUConstruct, LFUDump and FreeLFU funcs with reading cache sizes from file\n");
+    assert (file);
 
-    FILE* f = fopen (file, "r");
+    FILE* f;
 
-    assert (f);
+    if (strcmp (file, "stdout") == 0)
+        f = stdout;
 
-    int count = 0;
-    assert (fscanf (f, "%d", &count) == 1);    
+    else
+        f = fopen (file, "w");
 
-    int* sizes = calloc (count, sizeof (int));
-    assert (sizes);
+    int count  = 10000000;
+
+    DATA* pages = calloc (count, sizeof (DATA));
+    LFU* cache  = LfuConstruct (128);
+
+    printf ("Randomly generated pages\n");
 
     for (int i = 0; i < count; ++i)
-        assert (fscanf (f, "%d", sizes + i) == 1);
-
-    LFU** caches = calloc (1, sizeof (LFU*));
-    assert (caches);
-
+        pages[i].data = rand () % 10000;
+    
     // for (int i = 0; i < count; ++i)
-    // {
-    //     caches[i] = LfuConstruct (sizes[i]);
-    //     assert (caches[i]);
-    // }
+    //     CPrintPage (pages + i);
 
-    // for (int i = 0; i < count; ++i)
-    //     LFUDump (caches[i]);
+    time_t start = time (NULL);
 
-    // for (int i = 0; i < count; ++i)
-    //     FreeLFU (caches[i]);
+    for (int i = 0; i < count; ++i)
+        InsertLFU (cache, pages + i);
 
-    free (sizes);
-    free (caches);
-    fclose (f);
+    start = time(NULL) - start;
+
+    printf ("%ld\n", start);
+
+    FreeLFU (cache);
+
+    free (pages);
+
+    if (strcmp (file, "stdout"))
+        fclose (f);
 }
