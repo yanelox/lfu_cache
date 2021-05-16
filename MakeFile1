@@ -1,0 +1,2 @@
+all:
+	gcc new_main.c Hash_Map.c LFU.c List_Map.c -o new_main

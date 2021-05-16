@@ -57,3 +57,4 @@ mytest.c
 !*/
 !*.c*
 !*.h
+!MakeFile1
