@@ -82,13 +82,7 @@ struct hash_cell* InsertHashMap (struct hash_map* Hash_Map, DATA* request)
     struct hash_cell* start_cell = cell;
 
     if (!cell->item)
-<<<<<<< HEAD
-    {   
-        cell->item = Lfu_Node_Constuct ();
-        cell->item->data_t = *request;
-=======
     {
->>>>>>> 778577d6eddd25a8c7cc8116f7041a4cdbf1195a
         return cell;
     }
 
@@ -108,23 +102,11 @@ struct hash_cell* InsertHashMap (struct hash_map* Hash_Map, DATA* request)
     
 
         cell->next->prev = cell;
-        cell->next->item = Lfu_Node_Constuct ();
-        cell->next->item->data_t = *request;
     
         return cell->next;
     }
     
     return NULL;
-}
-
-struct lfu_node* Lfu_Node_Constuct () 
-{   
-    struct lfu_node* node = NULL;
-
-    node = (struct lfu_node*) calloc (1, sizeof (struct lfu_node));
-    assert (node);
-
-    return node;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -273,11 +255,10 @@ int PrintHashMap (struct hash_map* Hash_Map)
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-struct lfu_node* LfuNodeConstruct (DATA* request)
+struct lfu_node* LfuNodeConstruct ()
 {
     struct lfu_node* res = calloc (1, sizeof (struct lfu_node));
-
-    res->data_t = *request;
+    assert (res);
 
     return res;
 }

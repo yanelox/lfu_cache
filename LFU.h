@@ -78,7 +78,8 @@ int HashofChar (char* string, int len, int cache_size);
 int DelElem (struct hash_map* Hash_Map, DATA* request);
 int FreeHashMap (struct hash_map* Hash_Map);
 int PrintHashMap (struct hash_map* Hash_Map);
-struct lfu_node* LfuNodeConstruct (DATA* request);
+struct lfu_node* LfuNodeConstruct ();
+int HashofInt (int number, int cache_size);
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 struct hash_cell

@@ -5,6 +5,7 @@
 int Hash_Int_Test ();
 int Hash_Char_Test ();
 int Init_Func_Test ();
+int Test_SearchMap ();
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 static int pow_mod (int n, int k, int m) //This is just an auxiliary function
@@ -35,7 +36,7 @@ int main ()
     err = Hash_Int_Test ();
     err = Hash_Char_Test ();
     err = Init_Func_Test ();
-    err = Test_Search_Map ();
+    err = Test_SearchMap ();
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -56,7 +57,7 @@ int Hash_Int_Test ()
 
     f = fopen ("HI.txt", "r");
 
-    printf ("\t\t\t\t***Testing of Hash_of_Int***\n\n");
+    printf ("\t\t\t\t***Testing of HashofInt***\n\n");
     printf ("\t\t\t\t *Checking hand-made tests*\n");
 
     for (int i = 1; i <= num_tests; i++)
@@ -66,7 +67,7 @@ int Hash_Int_Test ()
 
         fscanf (f, "%d", &exp_h_int);
         //exp_h_int = ((coeff_1 * number + coeff_2) % prime) % cache_size;
-        h_int = Hash_of_Int (number, cache_size);
+        h_int = HashofInt (number, cache_size);
 
         if (exp_h_int != h_int)
         {
@@ -85,7 +86,7 @@ int Hash_Int_Test ()
         cache_size = rand () % 1234;
 
         exp_h_int = ((coeff_1 * number + coeff_2) % prime) % cache_size;
-        h_int = Hash_of_Int (number, cache_size);
+        h_int = HashofInt (number, cache_size);
 
         if (exp_h_int != h_int)
         {
@@ -119,7 +120,7 @@ int Hash_Char_Test ()
 
     f = fopen ("HC.txt", "r");
 
-    printf ("\n\t\t\t\t***Testing of Hash_of_Char***\n\n");
+    printf ("\n\t\t\t\t***Testing of HashofChar***\n\n");
     printf ("\t\t\t\t  *Checking hand-made tests*\n");
 
     for (int i = 0; i < num_tests; i++)
@@ -129,7 +130,7 @@ int Hash_Char_Test ()
         fscanf (f, "%d", &cache_size);
         fscanf (f, "%d", &exp_h_c);
 
-        h_c = Hash_of_Char (string, len, cache_size);
+        h_c = HashofChar (string, len, cache_size);
 
        if (exp_h_c != h_c)
         {
@@ -158,9 +159,9 @@ int Hash_Char_Test ()
         }
         sum = sum % prime;
 
-        exp_h_c = Hash_of_Int (sum, cache_size);
+        exp_h_c = HashofInt (sum, cache_size);
 
-        h_c = Hash_of_Char (string, len, cache_size);
+        h_c = HashofChar (string, len, cache_size);
 
         sum = 0;
 
@@ -189,18 +190,18 @@ int Init_Func_Test ()
 
     f = fopen ("INIT.txt", "r");
 
-    printf ("\n\t\t\t\t***Testing of Init_Hash_Map***\n\n");
+    printf ("\n\t\t\t\t***Testing of InitHashMap***\n\n");
     printf ("\t\t\t\t  *Checking hand-made tests*\n");
 
     for (int i = 1; i <= num_tests; i++)
     {
         fscanf (f, "%d", &cache_size);
 
-        test_map = Init_Hash_Map (cache_size);
+        test_map = InitHashMap (cache_size);
 
         if (!test_map)
             printf ("\t%d test falled:\n\tCache_size = %d\n\t\t"
-                    "Init_Hash_Map returned null pointer\n",
+                    "InitHashMap returned null pointer\n",
                     i, cache_size);
         
         else if (!test_map->size)
@@ -244,11 +245,11 @@ int Init_Func_Test ()
     {
         cache_size = rand () % 1000;
 
-        test_map = Init_Hash_Map (cache_size);
+        test_map = InitHashMap (cache_size);
 
         if (!test_map)
             printf ("\t%d test falled:\n\tCache_size = %d\n\t\t"
-                    "Init_Hash_Map returned null pointer\n",
+                    "InitHashMap returned null pointer\n",
                     i, cache_size);
         
         else if (!test_map->size)
@@ -290,7 +291,7 @@ int Init_Func_Test ()
     return 0;
 }
 
-int Test_Search_Map ()
+int Test_SearchMap ()
 {
     FILE* f;
     struct hash_map* test_map = NULL;
@@ -302,28 +303,29 @@ int Test_Search_Map ()
     request = (DATA*) calloc (num_tests, sizeof (DATA));
     assert (request);
 
-    test_map = Init_Hash_Map (cache_size);
+    test_map = InitHashMap (cache_size);
     
     f = fopen ("SF.txt", "r");
 
-    printf ("\n\t\t\t\t***Testing of Search_Map***\n\n");
+    printf ("\n\t\t\t\t***Testing of SearchMap***\n\n");
     printf ("\t\t\t\t  *Checking hand-made tests*\n");
 
     for (int i = 0; i < num_tests; i++)
     {
         fscanf (f, "%d", &((request + i)->data)); 
 
-        cell = Insert_Hash_Map (test_map, request + i);
+        cell = InsertHashMap (test_map, request + i);
+        // exit (1);
         if (!cell)
         {
-            cell->item = Lfu_Node_Constuct ();
+            cell->item = LfuNodeConstruct ();
             cell->item->data_t = *(request + i);
         }
     }
     
     for (int i = 0; i < num_tests; i++)
     {
-        cell = Search_Map (test_map, request + i);
+        cell = SearchMap (test_map, request + i);
         if (!cell)
             printf ("\t%d test falled:\n\tCache_size = %d\n\t\t"
                     "Function didn't find an element, but it's in Hash",
@@ -347,10 +349,10 @@ int Test_Search_Map ()
     {
         (request + i)->data = rand (); 
 
-        cell = Insert_Hash_Map (test_map, request + i);
+        cell = InsertHashMap (test_map, request + i);
         if (!cell)
         {
-            cell->item = Lfu_Node_Constuct ();
+            cell->item = LfuNodeConstruct ();
             cell->item->data_t = *(request + i);
         }
 
@@ -358,7 +360,7 @@ int Test_Search_Map ()
 
     for (int i = 0; i < num_tests; i++)
     {
-        cell = Search_Map (test_map, request + i);
+        cell = SearchMap (test_map, request + i);
         if (!cell)
             printf ("\t%d test falled:\n\tCache_size = %d\n\t\t"
                     "Function didn't find an element, but it's in Hash",
@@ -378,7 +380,7 @@ int Test_Search_Map ()
 
     fclose (f);  
     free (request);
-    Free_Hash_Map (test_map);
+    FreeHashMap (test_map);
 
     return 0;
 }
