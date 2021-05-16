@@ -57,4 +57,5 @@ mytest.c
 !*/
 !*.c*
 !*.h
+*.c.save
 !MakeFile1
