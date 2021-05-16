@@ -35,6 +35,7 @@ int main ()
     err = Hash_Int_Test ();
     err = Hash_Char_Test ();
     err = Init_Func_Test ();
+    err = Test_Search_Map ();
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -286,9 +287,98 @@ int Init_Func_Test ()
     }
 
     fclose (f);
+    return 0;
 }
 
 int Test_Search_Map ()
 {
+    FILE* f;
+    struct hash_map* test_map = NULL;
+    DATA* request = NULL;
+    struct hash_cell* cell = NULL;    
+    int cache_size = 123;
+    int num_tests = 5;
 
+    request = (DATA*) calloc (num_tests, sizeof (DATA));
+    assert (request);
+
+    test_map = Init_Hash_Map (cache_size);
+    
+    f = fopen ("SF.txt", "r");
+
+    printf ("\n\t\t\t\t***Testing of Search_Map***\n\n");
+    printf ("\t\t\t\t  *Checking hand-made tests*\n");
+
+    for (int i = 0; i < num_tests; i++)
+    {
+        fscanf (f, "%d", &((request + i)->data)); 
+
+        cell = Insert_Hash_Map (test_map, request + i);
+        if (!cell)
+        {
+            cell->item = Lfu_Node_Constuct ();
+            cell->item->data_t = *(request + i);
+        }
+    }
+    
+    for (int i = 0; i < num_tests; i++)
+    {
+        cell = Search_Map (test_map, request + i);
+        if (!cell)
+            printf ("\t%d test falled:\n\tCache_size = %d\n\t\t"
+                    "Function didn't find an element, but it's in Hash",
+                    i, cache_size);
+        if (cell->item->data_t.data != (request + i)->data)
+            printf ("\t%d test falled:\n\tCache_size = %d\n\t\t"
+                    "Function has found something else",
+                    i, cache_size);
+
+        else 
+        {
+            printf ("\t\t#%d Test is OK\n", i + 1);
+            if (i == num_tests)
+                printf ("\t\t\t\t    ***Tests passed***\n");
+        }
+    }
+
+    printf ("\n\t\t\t\t *Checking generated tests*\n");
+
+    for (int i = 0; i < num_tests; i++)
+    {
+        (request + i)->data = rand (); 
+
+        cell = Insert_Hash_Map (test_map, request + i);
+        if (!cell)
+        {
+            cell->item = Lfu_Node_Constuct ();
+            cell->item->data_t = *(request + i);
+        }
+
+    }
+
+    for (int i = 0; i < num_tests; i++)
+    {
+        cell = Search_Map (test_map, request + i);
+        if (!cell)
+            printf ("\t%d test falled:\n\tCache_size = %d\n\t\t"
+                    "Function didn't find an element, but it's in Hash",
+                    i, cache_size);
+        if (cell->item->data_t.data != (request + i)->data)
+            printf ("\t%d test falled:\n\tCache_size = %d\n\t\t"
+                    "Function has found something else",
+                    i, cache_size);
+
+        else 
+        {
+            printf ("\t\t#%d Test is OK\n", i + 1);
+            if (i == num_tests)
+                printf ("\t\t\t\t    ***Tests passed***\n");
+        }
+    }
+
+    fclose (f);  
+    free (request);
+    Free_Hash_Map (test_map);
+
+    return 0;
 }

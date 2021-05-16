@@ -91,8 +91,8 @@ struct hash_cell* Insert_Hash_Map (struct hash_map* Hash_Map, DATA* request)
 
     if (!cell->item)
     {
-        // cell->item = Lfu_Node_Constuct ();
-        // cell->item->data_t = *request;
+        cell->item = Lfu_Node_Constuct ();
+        cell->item->data_t = *request;
         
         return cell;
     }
@@ -112,8 +112,8 @@ struct hash_cell* Insert_Hash_Map (struct hash_map* Hash_Map, DATA* request)
         assert (cell->next); //TODO: exception catcher
 
         cell->next->prev = cell;
-        // cell->next->item = Lfu_Node_Constuct ();
-        // cell->next->item->data_t = *request;
+        cell->next->item = Lfu_Node_Constuct ();
+        cell->next->item->data_t = *request;
     
         return cell;
     }
@@ -236,7 +236,7 @@ int Del_Elem (struct hash_map* Hash_Map, DATA* request)
 
             Hash_Map->cells[key]->prev = NULL;
             
-            // free(cell->item);
+            free(cell->item);
             free (cell);
         }
            
@@ -247,7 +247,7 @@ int Del_Elem (struct hash_map* Hash_Map, DATA* request)
         cell->next->prev = cell->prev;
 
     cell->prev->next = cell->next;
-    // free (cell->item);
+    free (cell->item);
     free (cell);
 
     return 0;
