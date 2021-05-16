@@ -215,6 +215,38 @@ void DeleteList(struct freq_node* head)
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
+void ListPrint(struct freq_node* head)
+{
+    struct freq_node* cur_f = head;
+    struct lfu_node* cur_l;
+
+    if(cur_f->next == NULL)
+        printf("The list is empty -_-");
+
+    while(cur_f->next != NULL)
+    {
+        cur_f = cur_f->next;
+        printf("freq %d: ", cur_f->freq_t);
+
+        if(cur_f->child = NULL)
+            printf("ERRO_OR there is no elements");
+        else
+        {
+            cur_l = cur_f->child;
+
+            while(cur_l->next != NULL)
+            {
+                printf("%d ", cur_l->data_t.data);
+                cur_l = cur_l->next;
+            }
+
+            printf("%d;\n", cur_l->data_t.data);
+        }
+    }
+    return;
+}
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 void TestCreateHead()
 {
     struct freq_node* head;
@@ -225,6 +257,8 @@ void TestCreateHead()
     assert(head->prev == NULL);
     assert(head->child == NULL);
     free(head);
+
+    return;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -273,6 +307,8 @@ void TestCreateFreq()
     free(second);
     free(third);
     free(head);
+
+    return;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -304,12 +340,11 @@ void TestCreateLfu()
     assert(lf2->prev == lf1);
     assert(lf1->prev == NULL);
 
-    //assert(lf2->data_t == dat2);
-    //assert(lf1->data_t == dat1);
-
     free(par);
     free(lf1);
     free(lf2);
+
+    return;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -330,6 +365,8 @@ void TestRemoveFreq()
 
     free(second);
     free(head);
+
+    return;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -358,6 +395,8 @@ void TestRemoveLfu()
     free(lf2);
     free(par);
     free(head);
+
+    return;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -403,7 +442,10 @@ void TestReplaceLfu()
     free(head);
     free(par);
     free(par2);
+
+    return;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
+
 
