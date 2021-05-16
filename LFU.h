@@ -89,8 +89,25 @@ struct hash_map
 };
 //LFU - part
 //---------------------------------------------------------------------
+//---------------------------------------------------------------------
+typedef struct lfu_c LFU;
+
+struct lfu_c
+{
+    struct hash_map* HashTable;
+    struct freq_node* List;
+
+    int cache_size;
+    int cache_fullnes;
+};
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 DATA GetPage (FILE* f);
 void PrintPage (DATA* page, char* source);
+LFU* LfuConstruct (int cache_size);
+void InsertLFU (LFU* cache, DATA* request);
+void FreeLFU (LFU* cache);
+void LFUDump (LFU* cache);
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 #define CGetPage() GetPage(stdin);
