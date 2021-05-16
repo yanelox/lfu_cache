@@ -54,7 +54,7 @@ int InsertLFU (LFU* cache, DATA* request)
 
     assert (cache);
     assert (request);
-    printf ("====\n %d\n", request->data);
+
     struct hash_cell* found_cell = SearchMap (cache->HashTable, request);
     
     if (!found_cell)
@@ -69,14 +69,13 @@ int InsertLFU (LFU* cache, DATA* request)
 
             cache->cache_fullnes--;
         }
-        DATA tmp = {1};
         
         struct lfu_node* created_lfu = CreateLfu (*request, cache->List);
-        // printf ("1)%p\n", SearchMap (cache->HashTable, &tmp));
+
         struct hash_cell* created_cell = InsertHashMap (cache->HashTable, request);
         
         created_cell->item = created_lfu;
-        // printf ("%p\n", SearchMap (cache->HashTable, &tmp));
+
     }
 
     else

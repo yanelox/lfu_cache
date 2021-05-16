@@ -80,7 +80,7 @@ struct hash_cell* InsertHashMap (struct hash_map* Hash_Map, DATA* request)
     struct hash_cell* start_cell = cell;
 
     if (!cell->item)
-    {   
+    {
         return cell;
     }
 
@@ -97,10 +97,11 @@ struct hash_cell* InsertHashMap (struct hash_map* Hash_Map, DATA* request)
 
         cell->next = (struct hash_cell*) calloc (1, sizeof (struct hash_cell));
         assert (cell->next); //TODO: exception catcher
+    
 
         cell->next->prev = cell;
     
-        return cell;
+        return cell->next;
     }
     
     return NULL;
@@ -249,4 +250,14 @@ int PrintHashMap (struct hash_map* Hash_Map)
 
         printf ("\n");
     }
+}
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+struct lfu_node* LfuNodeConstruct (DATA* request)
+{
+    struct lfu_node* res = calloc (1, sizeof (struct lfu_node));
+
+    res->data_t = *request;
+
+    return res;
 }
