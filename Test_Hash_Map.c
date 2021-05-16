@@ -1,0 +1,173 @@
+#include "LFU.h"
+#include <time.h>
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+int Hash_Int_Test ();
+int Hash_Char_Test ();
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+static int pow_mod (int n, int k, int m) //This is just an auxiliary function
+{
+    int mult = 0, prod = 0;
+
+    if (n == 0 || n == 1 || k == 1)
+        return n;
+    if (k == 0)
+        return 1;
+
+    mult = n;
+    prod = 1;
+    while (k > 0)
+    {
+        if ((k % 2) == 1)
+        prod = (prod * mult) % m;
+        mult = (mult * mult) % m;
+        k = k / 2;
+    }
+    return prod;
+}
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+int main ()
+{
+    int err = 0;
+    err = Hash_Int_Test ();
+    err = Hash_Char_Test ();
+}
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+int Hash_Int_Test ()
+{   
+    FILE* f;
+    int num_tests = 5;
+    int number = 0;
+    int cache_size = 0;
+    int exp_h_int = 0;
+    int h_int = 0;
+    long long ltime = 0;
+    int stime = 0;
+
+    int prime = 2909;
+    int coeff_1 = 211;
+    int coeff_2 = 521;
+
+    f = fopen ("HI.txt", "r");
+
+    printf ("\t\t\t\t***Testing of Hash_of_Int***\n\n");
+    printf ("\t\t\t\t *Checking hand-made tests*\n");
+
+    for (int i = 1; i <= num_tests; i++)
+    {
+        fscanf (f, "%d", &number);
+        fscanf (f, "%d", &cache_size);
+
+        fscanf (f, "%d", &exp_h_int);
+        //exp_h_int = ((coeff_1 * number + coeff_2) % prime) % cache_size;
+        h_int = Hash_of_Int (number, cache_size);
+
+        if (exp_h_int != h_int)
+        {
+            printf ("\t%d test falled:\n\tNumber = %d\n\tCache_size = %d\n\t\tWrong correspondence of expected result [%d] with gotten [%d]\n", i, number, cache_size, exp_h_int, h_int);
+            continue;
+        }
+        printf ("\t\t#%d Test is OK\n", i);
+        if (i == num_tests)
+            printf ("\t\t\t\t    ***Tests passed***\n");
+    }
+    printf ("\n\t\t\t\t *Checking generated tests*\n");
+
+    for (int i = 1; i <= num_tests; i++)
+    {
+        number = rand () % 4321;
+        cache_size = rand () % 1234;
+
+        exp_h_int = ((coeff_1 * number + coeff_2) % prime) % cache_size;
+        h_int = Hash_of_Int (number, cache_size);
+
+        if (exp_h_int != h_int)
+        {
+            printf ("\t%d test falled:\n\tNumber = %d\n\tCache_size = %d\n\t\tWrong correspondence of expected result [%d] with gotten [%d]\n", i, number, cache_size, exp_h_int, h_int);
+            continue;
+        }
+        printf ("\t\t#%d Test is OK\n", i);
+        if (i == num_tests)
+            printf ("\t\t\t\t    ***Tests passed***\n");
+    }
+    fclose (f);
+
+    return 0;
+
+}
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+int Hash_Char_Test ()
+{
+    FILE* f;
+
+    int num_tests = 5;
+    int coeff = 241;
+    int prime = 919;
+    int exp_h_c = 0;
+    int h_c = 0;
+    char string[100] = {0};
+    int len = 100;
+    int cache_size = 0;
+    int sum = 0;
+
+    f = fopen ("HC.txt", "r");
+
+    printf ("\n\t\t\t\t***Testing of Hash_of_Char***\n\n");
+    printf ("\t\t\t\t  *Checking hand-made tests*\n");
+
+    for (int i = 0; i < num_tests; i++)
+    {
+        fscanf (f, "%d", &len);
+        fscanf (f, "%s", string);
+        fscanf (f, "%d", &cache_size);
+        fscanf (f, "%d", &exp_h_c);
+
+        h_c = Hash_of_Char (string, len, cache_size);
+
+       if (exp_h_c != h_c)
+        {
+            printf ("\t%d test falled:\n\tString = [%s]\n\tCache_size = %d\n\t\tWrong correspondence of expected result [%d] with gotten [%d]\n", i, string, cache_size, exp_h_c, h_c);
+            continue;
+        }
+        printf ("\t\t#%d Test is OK\n", i);
+        if (i == num_tests)
+            printf ("\t\t\t\t    ***Tests passed***\n");
+    } 
+
+    printf ("\n\t\t\t\t *Checking generated tests*\n");
+
+    for (int i = 1; i <= num_tests; i++)
+    {   
+        len = rand () % 100;
+        for (int i = 0; i < len; i++)
+            string[i] = (rand () % 94) + 32;
+        cache_size = rand () % 427;
+
+       for (int j = 0; j < len; j++)
+        {
+            sum += ( abs (string[j]) * pow_mod (coeff, len - j, prime)) % prime;
+        }
+        sum = sum % prime;
+
+        exp_h_c = Hash_of_Int (sum, cache_size);
+
+        h_c = Hash_of_Char (string, len, cache_size);
+
+        sum = 0;
+
+        if (exp_h_c != h_c)
+        {
+            printf ("\t%d test falled:\n\tString = [%s]\n\tCache_size = %d\n\t\tWrong correspondence of expected result [%d] with gotten [%d]\n", i, string, cache_size, exp_h_c, h_c);
+            continue;
+        }
+        printf ("\t\t#%d Test is OK\n", i);
+        if (i == num_tests)
+            printf ("\t\t\t\t    ***Tests passed***\n");
+    }
+
+    fclose (f);
+}
