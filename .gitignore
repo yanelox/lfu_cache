@@ -60,3 +60,4 @@ mytest.c
 *.c.save
 !*.makef
 !*.txt
+!*.jpg

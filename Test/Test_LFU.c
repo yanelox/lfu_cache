@@ -50,33 +50,37 @@ void TestLFUFunc (char* file)
 
     int count  = 1000000;
 
-    DATA* pages = calloc (count, sizeof (DATA));
-    LFU* cache  = LfuConstruct (128);
+    DATA* pages = calloc (10000000, sizeof (DATA));
 
-    assert (pages);
-
-    printf ("Randomly generated pages\n");
-
-    for (int i = 0; i < count; ++i)
+    for (int i = 0; i < 10000000; ++i)
         pages[i].data = rand () % 10000;
-    
-    // for (int i = 0; i < 2; ++i)
-    //     CPrintPage (pages + i);
 
-    time_t start = time (NULL);
+    for(; count < 10000000; count += 500000)
+    {
+        LFU* cache  = LfuConstruct (128);
 
-    LFUDump (cache, "stdout");
+        assert (pages);
 
-    for (int i = 0; i < count; ++i)
-       InsertLFU (cache, &pages[i]);
+        printf ("Randomly generated pages\n");
+        
+        // for (int i = 0; i < 2; ++i)
+        //     CPrintPage (pages + i);
 
-    start = time(NULL) - start;
+        time_t start = time (NULL);
 
-    printf ("%time = ld\n", start);
+        // LFUDump (cache, "stdout");
 
-    LFUDump (cache, "stdout");
+        for (int i = 0; i < count; ++i)
+            InsertLFU (cache, &pages[i]);
 
-    FreeLFU (cache);
+        start = time(NULL) - start;
+
+        printf ("time = %ld\n", start);
+
+        // LFUDump (cache, "stdout");
+
+        FreeLFU (cache);
+    }
 
     free (pages);
 
