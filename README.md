@@ -4,4 +4,4 @@ Realisation of LFU cache algorithm ([read more about algorithm](http://dhruvbird
 * Hash_Map - directory with lib of hash-table (Hash_Map.c)
 * List - directory with lib of frequency list (List_Map.c)
 * Test - directory with some tests
-* main - directory with main.c file which is used for "Problem LC" contest
+* main - directory with new_main.c file which is used for "Problem LC" contest
