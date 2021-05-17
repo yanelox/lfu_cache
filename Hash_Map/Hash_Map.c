@@ -1,4 +1,4 @@
-#include "LFU.h"
+#include "../LFU/LFU.h"
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 //Params: integer number, power to number, modulo (number, power, mod)

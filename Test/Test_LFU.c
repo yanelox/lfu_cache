@@ -72,7 +72,9 @@ void TestLFUFunc (char* file)
 
     start = time(NULL) - start;
 
-    printf ("%ld\n", start);
+    printf ("%time = ld\n", start);
+
+    LFUDump (cache, "stdout");
 
     FreeLFU (cache);
 
