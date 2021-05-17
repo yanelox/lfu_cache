@@ -1,8 +1,6 @@
 #include "../LFU/LFU.h"
 
 //---------------------------------------------------------------------
-//Creates an element in the place the user wants. Function need data(frequency)
-//and previous item (place where we should create)
 //---------------------------------------------------------------------
 struct freq_node* CreateFreq(int freq_dat, struct freq_node* prev_fr)                      //prev_fr != NULL!! That function doesn`t create head!
 {
@@ -27,8 +25,6 @@ struct freq_node* CreateFreq(int freq_dat, struct freq_node* prev_fr)           
     return res;
 }
 //---------------------------------------------------------------------
-// Creates last lfu_node at frequency 1. If frequency 1 is not exist, it will
-// be created (with function create_freq).
 //---------------------------------------------------------------------
 struct lfu_node* CreateLfu(DATA lfu_dat, struct freq_node* head)
 {
@@ -67,7 +63,6 @@ struct lfu_node* CreateLfu(DATA lfu_dat, struct freq_node* head)
     return res;
 }
 //---------------------------------------------------------------------
-//delete freq_node
 //---------------------------------------------------------------------
 void RemoveFreq(struct freq_node* del)                                                                 //del->prev != NULL and del->next != NULL
 {
@@ -82,7 +77,6 @@ void RemoveFreq(struct freq_node* del)                                          
     return;
 }
 //---------------------------------------------------------------------
-//delete lfu_node
 //---------------------------------------------------------------------
 void RemoveLfu(struct freq_node* head)
 {
@@ -108,9 +102,6 @@ void RemoveLfu(struct freq_node* head)
     return;
 }
 //---------------------------------------------------------------------
-//When we already have the resulting item in the list, we need to replace
-//it. If the element with current frequency + 1 doesn`t exist it will
-//be created (with function create_freq).
 //---------------------------------------------------------------------
 void ReplaceLfu(struct lfu_node* cur_lfu)
 {
@@ -171,7 +162,6 @@ void ReplaceLfu(struct lfu_node* cur_lfu)
     return;
 }
 //---------------------------------------------------------------------
-// Initialization of head of list
 //---------------------------------------------------------------------
 struct freq_node* CreateHead()
 {
@@ -185,7 +175,6 @@ struct freq_node* CreateHead()
     return head;
 }
 //---------------------------------------------------------------------
-// Func with free's list
 //---------------------------------------------------------------------
 void DeleteList(struct freq_node* head)
 {
@@ -216,7 +205,6 @@ void DeleteList(struct freq_node* head)
     return;
 }
 //---------------------------------------------------------------------
-// Func which print list to console
 //---------------------------------------------------------------------
 void ListPrint(struct freq_node* head, FILE* f)
 {
