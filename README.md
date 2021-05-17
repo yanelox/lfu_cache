@@ -10,3 +10,5 @@ Realisation of LFU cache algorithm ([read more about algorithm](http://dhruvbird
 ![something](/images/HVvpm-EUfK4.jpg "sometext")
 ### Filling cache with 10^7 pages
 ![something](/images/LGR1aCRwkAE.jpg "sometext")
+## Graphic of relatiomship between count of pages with data and time of their adding
+![something](/images/gra.jpg "sometext")
