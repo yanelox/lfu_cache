@@ -62,3 +62,4 @@ mytest.c
 !*.txt
 !*.jpg
 !*.png
+!*.pdf
