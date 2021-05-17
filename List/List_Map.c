@@ -1,4 +1,4 @@
-#include "LFU.h"
+#include "../LFU/LFU.h"
 
 //---------------------------------------------------------------------
 //Creates an element in the place the user wants. Function need data(frequency)

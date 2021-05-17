@@ -1,5 +1,8 @@
-#include "LFU.h"
+#include "Test_LFU.h"
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-void TestPageFunc (char* file);
-void TestLFUFunc (char* file);
+int main ()
+{
+    // TestPageFunc ("stdout");
+    TestLFUFunc  ("stdout");
+}

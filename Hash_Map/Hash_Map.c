@@ -1,4 +1,4 @@
-#include "LFU.h"
+#include "../LFU/LFU.h"
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 struct lfu_node* Lfu_Node_Constuct () ;
@@ -29,6 +29,7 @@ struct hash_map* InitHashMap (int cache_size) //Constructor of hash table
 {
     struct hash_map* Hash_Map = (struct hash_map*) calloc (1, sizeof (struct hash_map));
     assert (Hash_Map);
+    assert (cache_size > 0);
 
     Hash_Map->size = cache_size / 10 + 1; //number of collisions
 
@@ -100,7 +101,6 @@ struct hash_cell* InsertHashMap (struct hash_map* Hash_Map, DATA* request)
         cell->next = (struct hash_cell*) calloc (1, sizeof (struct hash_cell));
         assert (cell->next); //TODO: exception catcher
     
-
         cell->next->prev = cell;
     
         return cell->next;
@@ -165,7 +165,7 @@ struct hash_cell* SearchData (struct hash_cell* cell, DATA* request)
 {
     while (cell->next)
     {
-        if (cell->item->data_t.data == request->data)
+        if (cell->item && cell->item->data_t.data == request->data)
             return cell;
 
         cell = cell->next;
@@ -177,7 +177,8 @@ struct hash_cell* SearchData (struct hash_cell* cell, DATA* request)
     
     return NULL;
 }
-
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 struct hash_cell* SearchMap (struct hash_map* Hash_Map, DATA* request)
 {
     int key = HashofData (request, Hash_Map->size);

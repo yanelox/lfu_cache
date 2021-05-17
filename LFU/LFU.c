@@ -80,8 +80,7 @@ int InsertLFU (LFU* cache, DATA* request)
 
         struct hash_cell* created_cell = InsertHashMap (cache->HashTable, request);
         
-        created_cell->item = created_lfu;
-
+        created_cell->item = created_lfu;             
     }
 
     else
@@ -130,6 +129,7 @@ void LFUDump (LFU* cache, char* source)
     fprintf (f, "===\n");
     fprintf (f, "List:\n");
     ListPrint (cache->List, f);
+    fprintf (f, "===\n");
     fprintf (f, "Cache capacity = %d\n", cache->cache_size);
     fprintf (f, "Cache fullness = %d\n", cache->cache_fullnes);
     fprintf (f, "===\n");

@@ -1,0 +1,3 @@
+all:
+	gcc Test_Hash_Map.c ../LFU/LFU.c ../List/List_Map.c ../Hash_Map/Hash_Map.c -o test_ht
+

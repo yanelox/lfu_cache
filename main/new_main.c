@@ -1,4 +1,4 @@
-#include "LFU.h"
+#include "../LFU/LFU.h"
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 int main (int argc, char* argv[])
@@ -46,6 +46,6 @@ int main (int argc, char* argv[])
 
     free (input_page);
 
-    if (strcmp (argv[1], "stdin") != 0)
+    if (argc == 2 && strcmp (argv[1], "stdin") != 0)
         fclose (input);
 }

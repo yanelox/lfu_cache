@@ -1,0 +1,2 @@
+all:
+	gcc test.c Test_LFU.c ../LFU/LFU.c ../List/List_Map.c ../Hash_Map/Hash_Map.c -o test

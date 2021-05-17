@@ -1,4 +1,4 @@
-#include "LFU.h"
+#include "../LFU/LFU.h"
 #include <time.h>
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -25,8 +25,8 @@ void TestPageFunc (char* file)
     for (int i = 0; i < count; ++i)
         pages[i].data = rand () % 10000;
     
-    for (int i = 0; i < count; ++i)
-        CPrintPage (pages + i);
+    // for (int i = 0; i < count; ++i)
+    //     CPrintPage (pages + i);
 
 
     free (pages);
@@ -48,23 +48,27 @@ void TestLFUFunc (char* file)
     else
         f = fopen (file, "w");
 
-    int count  = 10000000;
+    int count  = 1000000;
 
     DATA* pages = calloc (count, sizeof (DATA));
     LFU* cache  = LfuConstruct (128);
+
+    assert (pages);
 
     printf ("Randomly generated pages\n");
 
     for (int i = 0; i < count; ++i)
         pages[i].data = rand () % 10000;
     
-    // for (int i = 0; i < count; ++i)
+    // for (int i = 0; i < 2; ++i)
     //     CPrintPage (pages + i);
 
     time_t start = time (NULL);
 
+    LFUDump (cache, "stdout");
+
     for (int i = 0; i < count; ++i)
-        InsertLFU (cache, pages + i);
+       InsertLFU (cache, &pages[i]);
 
     start = time(NULL) - start;
 

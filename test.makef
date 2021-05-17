@@ -1,2 +1,0 @@
-all:
-	gcc test.c Test_LFU.c LFU.c List_Map.c Hash_Map.c -o test
