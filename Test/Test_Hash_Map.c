@@ -1,4 +1,4 @@
-#include "../LFU/LFU.h"
+#include "LFU.h"
 #include <time.h>
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -8,7 +8,7 @@ int Init_Func_Test ();
 int Test_SearchMap ();
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-static int pow_mod (int n, int k, int m) //This is just an auxiliary function
+static int pow_mod (int n, int k, int m) 
 {
     int mult = 0, prod = 0;
 
@@ -30,6 +30,50 @@ static int pow_mod (int n, int k, int m) //This is just an auxiliary function
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
+static int TestFreeHashMap (struct hash_map* Hash_Map) //Destructor of hash table
+{
+    struct hash_cell* del = NULL;
+    for (int counter = 0; counter < Hash_Map->size; counter++)
+    {
+        del = Hash_Map->cells[counter]->next;
+        if (del)
+        {
+            while (del->next)
+            {
+                free (del->item);
+                del->item = NULL;
+                del = del->next;
+                free (del->prev);
+            }
+            free (del->item);
+            del->item = NULL;
+            free (del);
+        }
+    }
+
+    for (int i = 0; i < Hash_Map->size; i++)
+    {
+        free (Hash_Map->cells[i]->item);
+        Hash_Map->cells[i]->item = NULL;
+        free (Hash_Map->cells[i]);
+    }
+
+    free (Hash_Map->cells);
+
+    free (Hash_Map);
+    return 0;
+}
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+static struct lfu_node* LfuNodeConstruct ()
+{
+    struct lfu_node* res = calloc (1, sizeof (struct lfu_node));
+    assert (res);
+
+    return res;
+}
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 int main ()
 {
     int err = 0;
@@ -37,6 +81,8 @@ int main ()
     err = Hash_Char_Test ();
     err = Init_Func_Test ();
     err = Test_SearchMap ();
+
+    return err;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -48,8 +94,6 @@ int Hash_Int_Test ()
     int cache_size = 0;
     int exp_h_int = 0;
     int h_int = 0;
-    long long ltime = 0;
-    int stime = 0;
 
     int prime = 2909;
     int coeff_1 = 211;
@@ -178,6 +222,7 @@ int Hash_Char_Test ()
     }
 
     fclose (f);
+    return 0;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -316,7 +361,7 @@ int Test_SearchMap ()
 
         cell = InsertHashMap (test_map, request + i);
         // exit (1);
-        if (!cell)
+        if (cell)
         {
             cell->item = LfuNodeConstruct ();
             cell->item->data_t = *(request + i);
@@ -350,7 +395,7 @@ int Test_SearchMap ()
         (request + i)->data = rand (); 
 
         cell = InsertHashMap (test_map, request + i);
-        if (!cell)
+        if (cell)
         {
             cell->item = LfuNodeConstruct ();
             cell->item->data_t = *(request + i);
@@ -380,7 +425,7 @@ int Test_SearchMap ()
 
     fclose (f);  
     free (request);
-    FreeHashMap (test_map);
+    TestFreeHashMap (test_map);
 
     return 0;
 }

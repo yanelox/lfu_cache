@@ -1,35 +1,44 @@
-#include "../LFU/LFU.h"
+#include "LFU.h"
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-struct lfu_node* Lfu_Node_Constuct () ;
-
-static int pow_mod (int n, int k, int m) //This is just an auxiliary function
+//Params: integer number, power to number, modulo (number, power, mod)
+//  This function recieves integer number and raise it to a power modulo mod
+//Returned value: The result of operation
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+static int pow_mod (int number, int power, int mod) //This is just an auxiliary function
 {
     int mult = 0, prod = 0;
 
-    if (n == 0 || n == 1 || k == 1)
-        return n;
-    if (k == 0)
+    if (number == 0 || number == 1 || power == 1)
+        return number;
+    if (power == 0)
         return 1;
 
-    mult = n;
+    mult = number;
     prod = 1;
-    while (k > 0)
+    while (power > 0)
     {
-        if ((k % 2) == 1)
-        prod = (prod * mult) % m;
-        mult = (mult * mult) % m;
-        k = k / 2;
+        if ((power % 2) == 1)
+        prod = (prod * mult) % mod;
+        mult = (mult * mult) % mod;
+        power = power / 2;
     }
     return prod;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-struct hash_map* InitHashMap (int cache_size) //Constructor of hash table
+//Params: The size of cache (cache_size)
+//  This function is constructor of hash table; it initializes Hash Map,
+//  calculates the size of hash using the formula {Size = cache_size / 10 + 1},
+//  initializes array of pointers to cells and cells
+//Returned value: Hash Map 
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+struct hash_map* InitHashMap (int cache_size) 
 {
     struct hash_map* Hash_Map = (struct hash_map*) calloc (1, sizeof (struct hash_map));
     assert (Hash_Map);
-    assert (cache_size > 0);
 
     Hash_Map->size = cache_size / 10 + 1; //number of collisions
 
@@ -44,6 +53,12 @@ struct hash_map* InitHashMap (int cache_size) //Constructor of hash table
 
     return Hash_Map;
 }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//Params: Hash Map (Hash_Map)
+//  This function clear memory allocated for Hash_Map, array of pointers
+//  to cells and cells
+//Returned value: return integer zero
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 int FreeHashMap (struct hash_map* Hash_Map) //Destructor of hash table
@@ -74,6 +89,12 @@ int FreeHashMap (struct hash_map* Hash_Map) //Destructor of hash table
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
+//Params: Hash Map (Hash_Map) and pointer to request (request)
+//  This function finds an avaliable place to adding new data  
+//  If this data already exists here, it does nothing  
+//Returned value: The pointer on an avaliable cell in Hash Map
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 struct hash_cell* InsertHashMap (struct hash_map* Hash_Map, DATA* request)
 {
     assert (Hash_Map); //TODO: exception catcher
@@ -101,6 +122,7 @@ struct hash_cell* InsertHashMap (struct hash_map* Hash_Map, DATA* request)
         cell->next = (struct hash_cell*) calloc (1, sizeof (struct hash_cell));
         assert (cell->next); //TODO: exception catcher
     
+
         cell->next->prev = cell;
     
         return cell->next;
@@ -110,7 +132,12 @@ struct hash_cell* InsertHashMap (struct hash_map* Hash_Map, DATA* request)
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-int HashofData (DATA* request, int cache_size)
+//Params: Request (request) and size of hash (hash_size) 
+//  This function transforms struct to string for calculating hash later  
+//Returned value: Key of Hash Table
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+int HashofData (DATA* request, int hash_size)
 {
     int key = 0;
     char* string = NULL;
@@ -120,14 +147,19 @@ int HashofData (DATA* request, int cache_size)
     string = memcpy (string, request, req_size);
 
    
-    key = HashofChar (string, req_size, cache_size);
+    key = HashofChar (string, req_size, hash_size);
     free (string);
      
     return key;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-int HashofInt (int number, int cache_size)
+//Params: Integer number (number) and size of hash (hash_size)
+//  This function calculates hash of integer number 
+//Returned value: Hash of int 
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+int HashofInt (int number, int hash_size)
 {
     int prime = 2909;
     int coeff_1 = 211;
@@ -135,14 +167,18 @@ int HashofInt (int number, int cache_size)
 
     int h_int = 0;
 
-    h_int = ((coeff_1 * number + coeff_2) % prime) % cache_size;
+    h_int = ((coeff_1 * number + coeff_2) % prime) % hash_size;
 
     return h_int;
-
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-int HashofChar (char* string, int len, int cache_size)
+//Params: String (string), length of string (len) and size of hash (hash_size)
+//  This function calculates hash of string
+//Returned value: Hash of string
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+int HashofChar (char* string, int len, int hash_size)
 {
     int h_c = 0;
     int coeff = 241;
@@ -151,21 +187,26 @@ int HashofChar (char* string, int len, int cache_size)
 
     for (int i = 0; i < len; i++)
     {
-        sum += ( abs (string[i]) * pow_mod (coeff, len - i, prime)) % prime;
+        sum += ( abs (string[i]) * pow_mod (coeff, len - i, prime)) % prime + 1;
     }
     sum = sum % prime;
 
-    h_c = HashofInt (sum, cache_size);
+    h_c = HashofInt (sum, hash_size);
 
     return h_c;
 }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//Params: elem of array of pointers to cells (cell) in Hash Map and request (request)
+//  This function searches data in list of collisions
+//Returned value: Pointer to cell and NULL pointer if data hasn't been found
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 struct hash_cell* SearchData (struct hash_cell* cell, DATA* request)
 {
     while (cell->next)
     {
-        if (cell->item && cell->item->data_t.data == request->data)
+        if (cell->item->data_t.data == request->data)
             return cell;
 
         cell = cell->next;
@@ -179,6 +220,11 @@ struct hash_cell* SearchData (struct hash_cell* cell, DATA* request)
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
+//Params: Hash Map (Hash_Map) and request (request)
+//  This function searches data in Hash Map
+//Returned value: Pointer to cell and NULL pointer if data hasn't been found
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 struct hash_cell* SearchMap (struct hash_map* Hash_Map, DATA* request)
 {
     int key = HashofData (request, Hash_Map->size);
@@ -187,11 +233,17 @@ struct hash_cell* SearchMap (struct hash_map* Hash_Map, DATA* request)
 
     if (!cell->item)
         return NULL;
-    // printf ("im here\n  ");
+
     cell = SearchData (cell, request);
 
     return cell;
 }
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//Params: Hash Map (Hash_Map) and request (request)
+//  This function deletes cell with node with data from Hash Map and do nothing 
+//  if data isn't here
+//Returned value: Integer zero
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 int DelElem (struct hash_map* Hash_Map, DATA* request)
@@ -234,7 +286,6 @@ int PrintHashMap (struct hash_map* Hash_Map, FILE* f)
 {
     assert (Hash_Map);
 
-    int res = 0;
     struct hash_cell* cell;
 
     for (int i = 0; i < Hash_Map->size; i++)
@@ -253,13 +304,7 @@ int PrintHashMap (struct hash_map* Hash_Map, FILE* f)
 
         fprintf (f, "\n");
     }
+    return 0;
 }
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-struct lfu_node* LfuNodeConstruct ()
-{
-    struct lfu_node* res = calloc (1, sizeof (struct lfu_node));
-    assert (res);
-
-    return res;
-}
