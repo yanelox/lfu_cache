@@ -1,6 +1,5 @@
 #include "LFU.h"
 //---------------------------------------------------------------------
-// Function which get stream-variable and read page with data from it
 //---------------------------------------------------------------------
 DATA GetPage (FILE* f)
 {
@@ -13,8 +12,6 @@ DATA GetPage (FILE* f)
     return res;
 }
 //---------------------------------------------------------------------
-// Function which print page with data to file with name "source" or
-// to console if "source" is stdout
 //---------------------------------------------------------------------
 void PrintPage (DATA* page, char* source)
 {
@@ -34,7 +31,6 @@ void PrintPage (DATA* page, char* source)
     fprintf (f, "===\n");
 }
 //---------------------------------------------------------------------
-// Func which initialize cache and returns pointer to it
 //---------------------------------------------------------------------
 LFU* LfuConstruct (int cache_size)
 {
@@ -54,8 +50,6 @@ LFU* LfuConstruct (int cache_size)
     return res; 
 }
 //---------------------------------------------------------------------
-// Func which insert page with data to cache and returns 0 if earlier
-// there isn't this page in cache and 1 if it is
 //---------------------------------------------------------------------
 int InsertLFU (LFU* cache, DATA* request)
 {   
@@ -95,7 +89,6 @@ int InsertLFU (LFU* cache, DATA* request)
     return res;
 }
 //---------------------------------------------------------------------
-// Func which free's memory from cache
 //---------------------------------------------------------------------
 void FreeLFU (LFU* cache)
 {
@@ -108,7 +101,6 @@ void FreeLFU (LFU* cache)
     free (cache);
 }
 //---------------------------------------------------------------------
-// Print all cache
 //---------------------------------------------------------------------
 void LFUDump (LFU* cache, char* source)
 {
