@@ -209,7 +209,7 @@ struct hash_cell* SearchData (struct hash_cell* cell, DATA* request)
 {
     while (cell->next)
     {
-        if (cell->item->data_t.data == request->data)
+        if (cell->item->data_t.data == request->data)   
             return cell;
 
         cell = cell->next;
@@ -269,6 +269,11 @@ int DelElem (struct hash_map* Hash_Map, DATA* request)
             Hash_Map->cells[key]->prev = NULL;
             
             free (cell);
+        }
+
+        else
+        {
+            Hash_Map->cells[key]->item = NULL;
         }
            
         return 0;
