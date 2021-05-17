@@ -37,6 +37,9 @@ static int pow_mod (int number, int power, int mod) //This is just an auxiliary 
 //---------------------------------------------------------------------
 struct hash_map* InitHashMap (int cache_size) 
 {
+    if (cache_size < 0)
+        return NULL;
+
     struct hash_map* Hash_Map = (struct hash_map*) calloc (1, sizeof (struct hash_map));
     assert (Hash_Map);
 
@@ -97,7 +100,7 @@ int FreeHashMap (struct hash_map* Hash_Map) //Destructor of hash table
 //---------------------------------------------------------------------
 struct hash_cell* InsertHashMap (struct hash_map* Hash_Map, DATA* request)
 {
-    assert (Hash_Map); //TODO: exception catcher
+    assert (Hash_Map);
 
     int key = HashofData (request, Hash_Map->size);
     struct hash_cell* cell = Hash_Map->cells[key];
@@ -120,7 +123,7 @@ struct hash_cell* InsertHashMap (struct hash_map* Hash_Map, DATA* request)
         }
 
         cell->next = (struct hash_cell*) calloc (1, sizeof (struct hash_cell));
-        assert (cell->next); //TODO: exception catcher
+        assert (cell->next);
     
 
         cell->next->prev = cell;

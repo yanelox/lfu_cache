@@ -38,6 +38,9 @@ void PrintPage (DATA* page, char* source)
 //---------------------------------------------------------------------
 LFU* LfuConstruct (int cache_size)
 {
+    if (cache_size < 0)
+        return NULL;
+
     LFU* res = calloc (1, sizeof (LFU));
 
     assert (res);

@@ -26,10 +26,15 @@ int main (int argc, char* argv[])
 
     fscanf (input, "%d%d", &cache_size, &count_pages);
 
-
     DATA* input_page = calloc(1, sizeof (DATA));
 
     LFU* Cache = LfuConstruct (cache_size);
+
+    if (!Cache)
+    {
+        printf ("error\n");
+        return 0;
+    }
 
     for (int i = 0; i < count_pages; ++i)
     {
